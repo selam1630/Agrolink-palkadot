@@ -46,8 +46,6 @@ Pest & Disease: ${advice.pestAndDiseaseAdvice || "N/A"}.
 Recommended Crops: ${(advice.recommendedCrops || []).join(", ") || "N/A"}.
 `.trim();
 };
-
-// ✅ Generate and save voice file for each alert
 const generateVoiceAlert = async (alertText: string, languageCode: string) => {
   try {
     const audioDir = path.join(process.cwd(), "public", "audio");
@@ -71,8 +69,6 @@ const generateVoiceAlert = async (alertText: string, languageCode: string) => {
     return null;
   }
 };
-
-// ✅ Send alerts via TextBee with optional audio link
 const sendDisasterAlertsToFarmers = async (
   alerts: DisasterAlert[],
   adviceSummary?: string,
@@ -120,8 +116,8 @@ const sendDisasterAlertsToFarmers = async (
 
 const generateDIYAlertsFromForecast = (_forecastData: any): DisasterAlert[] => {
   return [
-    { description: "🚨 Test Flood Alert: Heavy rain expected tomorrow in Addis Ababa." },
-    { description: "🌪 Test Storm Alert: Strong winds expected this weekend." },
+    { description: "Test Flood Alert: Heavy rain expected tomorrow in Addis Ababa." },
+    { description: "Test Storm Alert: Strong winds expected this weekend." },
   ];
 };
 

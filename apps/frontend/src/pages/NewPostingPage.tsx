@@ -35,23 +35,27 @@ const NewPostingPage: React.FC = () => {
       prices: [...formData.prices, { commodity: "", price: "" }],
     });
   };
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLoading(true);
+  setError(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    try {
-      await axios.post("http://localhost:5000/news", formData);
-      alert("✅ News posted successfully and sent to farmers!");
-      navigate("/admin-dashboard3");
-    } catch (err: any) {
-      console.error("❌ Failed to post news:", err);
-      setError("Failed to create news. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    await axios.post("http://localhost:5000/news", formData);
+    alert("✅ News posted successfully and sent to farmers!");
+    setFormData({
+      category: "news",
+      title: "",
+      description: "",
+      prices: [{ commodity: "", price: "" }],
+    });
+  } catch (err: any) {
+    console.error("❌ Failed to post news:", err);
+    setError("Failed to create news. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-50 p-4">

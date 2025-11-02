@@ -1,7 +1,7 @@
-// controllers/newsController.ts
 import { Request, Response } from "express";
 import prisma from "../prisma/prisma";
 import axios from "axios";
+import { generateVoiceFromText } from "../src/utils/voiceGenerator"; 
 
 const TEXTBEE_API_KEY = process.env.TEXTBEE_API_KEY || "";
 const TEXTBEE_DEVICE_ID = process.env.TEXTBEE_DEVICE_ID || "";
@@ -9,13 +9,9 @@ const TEXTBEE_DEVICE_ID = process.env.TEXTBEE_DEVICE_ID || "";
 export const createNews = async (req: Request, res: Response) => {
   try {
     const { category, title, description, prices } = req.body;
-
-    // Validate required fields
     if (!title || !description || !category) {
       return res.status(400).json({ error: "Title, description, and category are required." });
     }
-
-    // Create news in the database
     const news = await prisma.news.create({
       data: {
         category,
@@ -24,8 +20,6 @@ export const createNews = async (req: Request, res: Response) => {
         prices: prices || null,
       },
     });
-
-    // Prepare SMS message
     let message = `📢 ${title}\n\n${description}`;
     if (category === "market" && prices?.length > 0) {
       message += `\n\n📊 Weekly Market Prices:\n`;
@@ -33,8 +27,9 @@ export const createNews = async (req: Request, res: Response) => {
         message += `- ${p.commodity}: ${p.price}\n`;
       });
     }
-
-    // Fetch all registered farmers
+    const fileName = `news_${Date.now()}`;
+    const voiceUrl = await generateVoiceFromText(message, "en", fileName); 
+    const smsMessage = `${message}\n\n🔊 Listen: ${voiceUrl}`;
     const farmers = await prisma.user.findMany({
       where: { role: "farmer", status: "registered" },
       select: { phone: true },
@@ -44,12 +39,11 @@ export const createNews = async (req: Request, res: Response) => {
       const phoneNumbers = farmers.map((f) => f.phone);
 
       try {
-        // Send SMS in bulk
         await axios.post(
           `https://api.textbee.dev/api/v1/gateway/devices/${TEXTBEE_DEVICE_ID}/send-sms`,
           {
             recipients: phoneNumbers,
-            message,
+            message: smsMessage,
           },
           {
             headers: {
@@ -63,7 +57,11 @@ export const createNews = async (req: Request, res: Response) => {
       }
     }
 
-    res.status(201).json({ message: "✅ News created and SMS sent!", news });
+    res.status(201).json({
+      message: "✅ News created, SMS & voice link sent successfully!",
+      news,
+      voiceUrl, 
+    });
   } catch (error) {
     console.error("❌ Error creating news:", error);
     res.status(500).json({ error: "Failed to create news." });

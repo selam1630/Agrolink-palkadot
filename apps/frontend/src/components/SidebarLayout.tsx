@@ -113,7 +113,7 @@ const SidebarLayout: React.FC = () => {
           }`}
         >
           <ClipboardListIcon className="w-5 h-5" />
-          <span className="font-medium">Pending Posts</span>
+          <span className="font-medium">News Posts</span>
         </Link>
 
         {/* Fertilizer Advice */}

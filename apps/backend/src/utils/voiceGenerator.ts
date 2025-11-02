@@ -5,9 +5,9 @@ import path from "path";
 export const generateVoiceFromText = async (text: string, language: string, fileName: string) => {
   try {
     const langMap: Record<string, string> = {
-      am: "am", // Amharic
-      om: "en", // Oromo (fallback to English for now)
-      ti: "en", // Tigrinya (fallback)
+      am: "am", 
+      om: "en", 
+      ti: "en", 
       en: "en",
     };
 
@@ -25,8 +25,6 @@ export const generateVoiceFromText = async (text: string, language: string, file
         else resolve();
       });
     });
-
-    // ✅ Return public URL to access the file
     const publicUrl = `${process.env.SERVER_URL || "http://localhost:5000"}/public/audio/${fileName}.mp3`;
     console.log(`✅ Voice file generated: ${publicUrl}`);
 

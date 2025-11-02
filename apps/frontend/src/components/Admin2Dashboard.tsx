@@ -162,12 +162,6 @@ const AdminDashboard2: React.FC = () => {
             {isLoading ? '...' : (t('adminDashboard.addFarmerButton') as string)}
           </button>
         </form>
-        <button
-          onClick={handleLogout}
-          className="mt-4 w-full bg-red-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-300"
-        >
-          {t('adminDashboard.logoutButton')}
-        </button>
       </div>
     </div>
   );
