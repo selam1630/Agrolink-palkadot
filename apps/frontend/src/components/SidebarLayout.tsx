@@ -91,7 +91,17 @@ const SidebarLayout: React.FC = () => {
             {t("recordProduct") || "recordProduct"}
           </span>
         </Link>
-
+   <Link
+          to="/create-product"
+          className={`flex items-center gap-3 px-3 py-3 rounded-lg ${transitionClass} ${
+            isActive("/create-product")
+              ? `${activeBgClass} shadow-md`
+              : `${hoverBgClass}`
+          }`}
+        >
+          <ClipboardListIcon className="w-5 h-5" />
+          <span className="font-medium">Post product</span>
+        </Link>
 
         {/* Pending Posts (Admin) */}
         <Link

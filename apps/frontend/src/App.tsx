@@ -4,7 +4,6 @@ import ForgotPassword from "./components/authPages/ForgotPassword";
 import ResetPassword from "./components/authPages/ResetPassword";
 import SignUp from "./components/authPages/SignUp";
 import SignIn from "./components/authPages/SignIn";
-import PostProduct from "./components/Product/PostProduct";
 import DashboardLayout from "./components/DashboardLayout";
 import ProductsList from "./components/Product/ProductList";
 import Calendar from "./pages/Calendar";
@@ -28,7 +27,8 @@ import NewPostingPage from "./pages/NewPostingPage";
 import FertilizerAdvice from "./components/advice/FertilizerAdvice"
 import FarmerAdviceDashboard from "./components/advice/fertlizerAdvice for dashbord";
 import BuyerDashboardLayout from "./components/BuyerDashboardLayout";
-import RecordFarmerProduct from "./components/Product/RecordFarmerProduct"
+import RecordFarmerProduct from "./components/Product/RecordFarmerProduct";
+import RecordedProductsPage from "./components/Product/PostProduct"
 function App() {
   return (
     <CartProvider>
@@ -45,12 +45,9 @@ function App() {
              <Route path="/admin-dashboard" element={<AdminDashboard />} />
           </Route>
 
-          {/* Dashboard Pages with the Header and Sidebar */}
           <Route element={<DashboardLayout />}>
-            {/* <Route path="/products" element={<ProductsList />} /> */}
             <Route path="/profile" element={<FarmerProfile />} />
-            <Route path="/create-product" element={<PostProduct />} />
-            {/* <Route path="/products/:id" element={<ProductDetail />} /> */}
+            <Route path="/create-product" element={<RecordedProductsPage  />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/news" element={<NewsPage />} />
             <Route path="/calendar" element={<Calendar />} />

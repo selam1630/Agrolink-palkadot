@@ -50,6 +50,8 @@ model Product {
   cartItems   CartItem[]
   orderItems  OrderItem[]
 
+  farmerName  String?
+  farmerPhone String?
   createdAt            DateTime?             @default(now()) @map("createdAt")
   updatedAt            DateTime?             @updatedAt @map("updatedAt")
   isDeleted            Boolean               @default(false)
