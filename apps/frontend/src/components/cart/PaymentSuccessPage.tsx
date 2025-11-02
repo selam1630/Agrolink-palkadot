@@ -1,13 +1,26 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
 
 const PaymentSuccessPage: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { token, loading: authLoading } = useAuth();
+
+  // Optional: Auto-redirect to products after 3 seconds
+  useEffect(() => {
+    if (!authLoading && token) {
+      const timer = setTimeout(() => {
+        navigate('/products');
+      }, 3000); // 3 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [authLoading, token, navigate]);
 
   return (
     <motion.div

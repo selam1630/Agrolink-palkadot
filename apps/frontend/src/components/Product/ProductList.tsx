@@ -21,11 +21,10 @@ interface Product {
   price?: number;
   imageUrl: string;
   isSold: boolean;
-  user: {
-    name: string;
-    phone: string;
-  };
+  farmerName: string;
+  farmerPhone: string;
 }
+
 
 const ProductList: React.FC = () => {
     const { t } = useTranslation();
@@ -55,7 +54,8 @@ const ProductList: React.FC = () => {
                     throw new Error(errorData.error || (t('productList.fetchError') as string));
                 }
                 const data = await response.json();
-                setProducts(data);
+setProducts(data.filter((p: Product) => !p.isSold));
+
             } catch (err: any) {
                 setError(err.message);
             } finally {
@@ -158,12 +158,10 @@ const ProductList: React.FC = () => {
                                           : t('productList.priceUnavailable')}
                                     </p>
                                     <p className="text-sm text-gray-500 mt-1">{t('productList.priceUnit')}</p>
-
-                                    {/* 👨‍🌾 Farmer Info */}
-                                    <div className="mt-3 text-sm text-gray-700">
-                                        <p><span className="font-semibold">{t('productList.farmer')}:</span> {product.user?.name}</p>
-                                        <p><span className="font-semibold">{t('productList.phone')}:</span> {product.user?.phone}</p>
-                                    </div>
+<div className="mt-3 text-sm text-gray-700">
+  <p><span className="font-semibold">{t('productList.farmer')}:</span> {product.farmerName}</p>
+  <p><span className="font-semibold">{t('productList.phone')}:</span> {product.farmerPhone}</p>
+</div>
                                 </CardContent>
                                 <CardFooter className="p-4 pt-0">
                                     {isProductInCart ? (
