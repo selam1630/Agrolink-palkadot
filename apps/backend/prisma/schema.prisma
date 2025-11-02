@@ -29,10 +29,11 @@ model User {
   advices          Advice[]
   farmerRegistries FarmerRegistry[]
 
-  createdAt DateTime? @default(now()) @map("createdAt")
-  updatedAt DateTime? @updatedAt @map("updatedAt")
-  fertilizerAdvices FertilizerAdvice[] @relation("UserFertilizerAdvices") 
-  soilData          SoilData[]          @relation("UserSoilData")
+  createdAt            DateTime?             @default(now()) @map("createdAt")
+  updatedAt            DateTime?             @updatedAt @map("updatedAt")
+  fertilizerAdvices    FertilizerAdvice[]    @relation("UserFertilizerAdvices")
+  soilData             SoilData[]            @relation("UserSoilData")
+  farmerProductRecords FarmerProductRecord[] @relation("RecordedByUser")
 }
 
 model Product {
@@ -49,9 +50,10 @@ model Product {
   cartItems   CartItem[]
   orderItems  OrderItem[]
 
-  createdAt DateTime? @default(now()) @map("createdAt")
-  updatedAt DateTime? @updatedAt @map("updatedAt")
-  isDeleted   Boolean     @default(false)
+  createdAt            DateTime?             @default(now()) @map("createdAt")
+  updatedAt            DateTime?             @updatedAt @map("updatedAt")
+  isDeleted            Boolean               @default(false)
+  farmerProductRecords FarmerProductRecord[] @relation("ProductRecords")
 }
 
 model CartItem {
@@ -145,39 +147,59 @@ model FarmerRegistry {
 
   createdAt DateTime @default(now())
 }
+
 model News {
-  id          String   @id @map("_id") @default(auto()) @db.ObjectId
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   category    String
   title       String
   description String
-  prices      Json?     
+  prices      Json?
   createdAt   DateTime @default(now())
 }
+
 model FertilizerAdvice {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  advice     String
-  crop       String?
-  region     String?
-  problem    String?
-  sent       Boolean  @default(false)
-  sentAt     DateTime?
-  farmerId   String   @db.ObjectId
-  farmer     User     @relation(fields: [farmerId], references: [id], name: "UserFertilizerAdvices")
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  advice   String
+  crop     String?
+  region   String?
+  problem  String?
+  sent     Boolean   @default(false)
+  sentAt   DateTime?
+  farmerId String    @db.ObjectId
+  farmer   User      @relation(fields: [farmerId], references: [id], name: "UserFertilizerAdvices")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model SoilData {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  farmerId String  @db.ObjectId
-  farmer   User    @relation(fields: [farmerId], references: [id], name: "UserSoilData")
-  ph       Float
-  nitrogen Float
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  farmerId   String  @db.ObjectId
+  farmer     User    @relation(fields: [farmerId], references: [id], name: "UserSoilData")
+  ph         Float
+  nitrogen   Float
   phosphorus Float
-  potassium Float
-  region   String?
+  potassium  Float
+  region     String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model FarmerProductRecord {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  farmerName   String
+  farmerPhone  String
+  bankAccount  String
+  productName  String
+  productImage String?
+  amount       Int
+  pricePerUnit Float
+  recordedById String   @db.ObjectId
+  recordedBy   User     @relation("RecordedByUser", fields: [recordedById], references: [id])
+  productId    String?  @db.ObjectId
+  product      Product? @relation("ProductRecords", fields: [productId], references: [id])
+
+  createdAt DateTime @default(now())
+  isPosted  Boolean  @default(false)
 }
