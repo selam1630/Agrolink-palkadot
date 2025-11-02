@@ -15,6 +15,7 @@ import profileRoute from "./routes/profileRoute";
 import adminRoutes from "./routes/adminRoute";
 import newsRoutes from "./routes/newsRoute";
 import fertilizerRoutes from "./routes/fertilizerRoute";
+import farmerProductRecordRoutes from "./routes/farmerProductRecord.routes"
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/news", newsRoutes);
 app.use("/api/fertilizer", fertilizerRoutes);
 app.use("/audio", express.static(path.join(process.cwd(), "public", "audio")));
+app.use("/api/farmer-products", farmerProductRecordRoutes);
 
 
 const PORT = 5000;

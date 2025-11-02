@@ -33,19 +33,28 @@ const SignIn: React.FC = () => {
     });
   };
 const handleLoginSuccess = (data: any) => {
-    setSuccessMessage(t('signIn.loginSuccess') as string);
-    localStorage.setItem('authToken', data.token);
-    setAuth(data.token, data.userId);
-    localStorage.setItem('role', data.role);
+  setSuccessMessage(t('signIn.loginSuccess') as string);
+
+  // Set everything in one go (localStorage + context)
+  localStorage.setItem('authToken', data.token);
+  localStorage.setItem('user-id', data.userId);
+  localStorage.setItem('role', data.role);
+
+  // ✅ Make sure to update context with all 3 arguments
+  setAuth(data.token, data.userId, data.role);
+
+  // Delay navigation slightly to allow context to update
+  setTimeout(() => {
     if (data.role === 'super_admin') {
-        navigate('/admin-dashboard'); 
+      navigate('/admin-dashboard');
     } else if (data.role === 'admin') {
-        navigate('/dashboard'); 
-    } 
-   else if (data.role === 'buyer') {
-        navigate('/products'); 
-    } 
+      navigate('/dashboard');
+    } else if (data.role === 'buyer') {
+      navigate('/products');
+    }
+  }, 100); 
 };
+
   const handlePasswordLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);

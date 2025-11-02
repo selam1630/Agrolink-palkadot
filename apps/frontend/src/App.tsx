@@ -27,7 +27,8 @@ import AdminDashboard2 from "./components/Admin2Dashboard";
 import NewPostingPage from "./pages/NewPostingPage";
 import FertilizerAdvice from "./components/advice/FertilizerAdvice"
 import FarmerAdviceDashboard from "./components/advice/fertlizerAdvice for dashbord";
-import BuyerDashboardLayout from "./components/BuyerDashboardLayout"
+import BuyerDashboardLayout from "./components/BuyerDashboardLayout";
+import RecordFarmerProduct from "./components/Product/RecordFarmerProduct"
 function App() {
   return (
     <CartProvider>
@@ -59,6 +60,7 @@ function App() {
             <Route path="/weather-detector" element={<Weather />} />
             <Route path="/new-posting" element={<NewPostingPage />} />
             <Route path="/fertilizer-advice" element={<FertilizerAdvice />} />
+            <Route path="/recordProduct" element={<RecordFarmerProduct />} />
           </Route>
         
 <Route element={<BuyerDashboardLayout />}>

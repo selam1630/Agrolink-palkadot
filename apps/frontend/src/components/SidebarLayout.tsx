@@ -78,19 +78,17 @@ const SidebarLayout: React.FC = () => {
           <HomeIcon className="w-5 h-5" />
           <span className="font-medium">{t("nav.home") || "Dashboard"}</span>
         </Link>
-
-        {/* Create Product Link */}
         <Link
-          to="/create-product"
+          to="/recordProduct"
           className={`flex items-center gap-3 px-3 py-3 rounded-lg ${transitionClass} ${
-            isActive("/create-product")
+            isActive("/recordProduct")
               ? `${activeBgClass} shadow-md`
               : `${hoverBgClass}`
           }`}
         >
           <PlusIcon className="w-5 h-5" />
           <span className="font-medium">
-            {t("nav.createProduct") || "Post Product"}
+            {t("recordProduct") || "recordProduct"}
           </span>
         </Link>
 
