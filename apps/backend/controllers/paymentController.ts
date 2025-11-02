@@ -87,9 +87,7 @@ export const createPayment = async (req: Request, res: Response) => {
 export const getProducts = async (req: Request, res: Response) => {
   try {
     const products = await prisma.product.findMany({
-      where: {
-        isSold: false,
-      },
+      where: { isSold: false },
     });
     return res.status(200).json(products);
   } catch (err: any) {
@@ -110,17 +108,15 @@ export const verifyPayment = async (req: Request, res: Response) => {
     const transaction = await prisma.transaction.findUnique({
       where: { txRef: tx_ref as string },
       include: {
-        order: {
-          include: { orderItems: true },
-        },
+        order: { include: { orderItems: true } },
       },
     });
 
     if (!transaction || !transaction.order)
       return res.status(404).json({ error: "Transaction or order not found." });
+
     if (paymentStatus === "success" && transaction.status === "pending") {
       const productIds = transaction.order.orderItems.map((item) => item.productId);
-
       await prisma.$transaction([
         prisma.transaction.update({
           where: { txRef: tx_ref as string },
@@ -130,10 +126,12 @@ export const verifyPayment = async (req: Request, res: Response) => {
           where: { id: transaction.orderId },
           data: { status: "completed" },
         }),
-        prisma.product.updateMany({
-          where: { id: { in: productIds } },
-          data: { isSold: true, status: "sold" },
-        }),
+        ...productIds.map((id) =>
+          prisma.product.update({
+            where: { id },
+            data: { isSold: true, status: "sold" },
+          })
+        ),
       ]);
 
       console.log("Payment verified and products marked as sold.");

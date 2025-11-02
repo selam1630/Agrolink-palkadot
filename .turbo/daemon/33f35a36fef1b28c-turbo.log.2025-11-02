@@ -354,3 +354,6 @@
 2025-11-02T12:45:52.918699Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("group-1"), path: AnchoredSystemPathBuf("apps\\frontend") }}))
 2025-11-02T12:45:58.913939Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\frontend\\src\\components\\Product\\ProductList.tsx")}
 2025-11-02T12:45:58.913977Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("group-1"), path: AnchoredSystemPathBuf("apps\\frontend") }}))
+2025-11-02T18:39:56.883060Z  WARN turborepo_filewatch: failed to remove cookie file failed to remove file `C:\Users\user\Downloads\AgroLink-auth\AgroLink-auth\.turbo\cookies\.turbo-cookie`
+2025-11-02T18:39:57.603994Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-11-02T18:39:57.604134Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
