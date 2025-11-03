@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import axios from "axios";
 import prisma from "../prisma/prisma";
+import { sendSMSNotification } from "../src/utils/sendFarmerNotification";
+import { generateVoiceFromText } from "../src/utils/voiceGenerator";
+
 
 const CHAPA_SECRET_KEY = process.env.CHAPA_SECRET_KEY || "";
 const CHAPA_VERIFY_URL = "https://api.chapa.co/v1/transaction/verify/";
@@ -108,7 +111,7 @@ export const verifyPayment = async (req: Request, res: Response) => {
     const transaction = await prisma.transaction.findUnique({
       where: { txRef: tx_ref as string },
       include: {
-        order: { include: { orderItems: true } },
+        order: { include: { orderItems: { include: { product: true } } } },
       },
     });
 
@@ -117,6 +120,8 @@ export const verifyPayment = async (req: Request, res: Response) => {
 
     if (paymentStatus === "success" && transaction.status === "pending") {
       const productIds = transaction.order.orderItems.map((item) => item.productId);
+
+      // ✅ Mark products as sold and transaction as successful
       await prisma.$transaction([
         prisma.transaction.update({
           where: { txRef: tx_ref as string },
@@ -134,12 +139,30 @@ export const verifyPayment = async (req: Request, res: Response) => {
         ),
       ]);
 
-      console.log("Payment verified and products marked as sold.");
+      console.log("✅ Payment verified and products marked as sold.");
+      for (const item of transaction.order.orderItems) {
+        const product = item.product;
+        if (product.farmerPhone) {
+          const farmerName = product.farmerName || "Farmer";
+          const productName = product.name || "your product";
+          const messageText = `Hello ${farmerName}, your product "${productName}" has been successfully sold. Please check your account for updates.`;
+          const voiceFileName = `sale_alert_${product.id}_${Date.now()}`;
+          const voiceUrl = await generateVoiceFromText(
+            messageText,
+            "en", 
+            voiceFileName
+          );
+          const finalMessage = voiceUrl
+            ? `${messageText}\n\n🔊 Listen to alert: ${voiceUrl}`
+            : messageText;
+          await sendSMSNotification(product.farmerPhone, finalMessage);
+        }
+      }
     }
 
     return res.status(200).json(response.data);
   } catch (err: any) {
-    console.error("Chapa verification error:", err.response?.data || err.message);
+    console.error("❌ Chapa verification error:", err.response?.data || err.message);
     return res.status(500).json({ error: "Failed to verify payment." });
   }
 };

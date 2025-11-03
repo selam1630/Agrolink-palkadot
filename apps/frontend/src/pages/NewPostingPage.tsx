@@ -42,7 +42,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   try {
     await axios.post("http://localhost:5000/news", formData);
-    alert("✅ News posted successfully and sent to farmers!");
+    alert("News posted successfully and sent to farmers!");
     setFormData({
       category: "news",
       title: "",
