@@ -41,7 +41,7 @@ const AdviceForm = () => {
     }
 
     try {
-      const response = await fetch('https://agrolink-updated-2-4.onrender.com/api/advice', {
+      const response = await fetch('https://agrolink-updated-2-5.onrender.com/api/advice', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

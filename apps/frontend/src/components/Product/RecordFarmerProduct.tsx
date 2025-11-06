@@ -1,4 +1,5 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState } from "react";
+import type { ChangeEvent } from "react";
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
