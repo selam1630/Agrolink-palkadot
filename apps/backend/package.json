@@ -5,7 +5,7 @@
   "scripts": {
     "onlyBack": "nodemon index.ts",
     "dev": "nodemon --legacy-watch index.ts",
-    "start": "node index.js",
+    "start": "npm run build && node dist/index.js",
     "build": "tsc",
     "lint": "eslint .",
     "create-super-admin": "ts-node createSuperAdmin.ts"
