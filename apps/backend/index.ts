@@ -18,12 +18,26 @@ import fertilizerRoutes from "./routes/fertilizerRoute";
 import farmerProductRecordRoutes from "./routes/farmerProductRecord.routes"
 
 const app = express();
+const allowedOrigins = [
+  "http://localhost:5173", // local dev
+  "https://agro-link-updated-2-frontend.vercel.app" // Vercel frontend
+];
 
-app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS policy: Origin ${origin} not allowed`));
+    }
+  },
   credentials: true
 }));
+
+// Handle preflight requests (OPTIONS) for all routes
+app.options("*", cors());
+
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '50mb' }));
 
 app.use('/api/payment', paymentRoute);
