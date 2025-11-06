@@ -377,7 +377,7 @@
     "notAuthenticated": "You are not authenticated. Please sign in."
   },
    "adminDashboard": {
-    "title": "Admin Dashboard",
+    "title": "SuperAdmin Dashboard",
     "nameLabel": "Name",
     "namePlaceholder": "Enter name",
     "emailLabel": "Email",

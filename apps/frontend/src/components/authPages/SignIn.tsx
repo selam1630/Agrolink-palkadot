@@ -34,16 +34,10 @@ const SignIn: React.FC = () => {
   };
 const handleLoginSuccess = (data: any) => {
   setSuccessMessage(t('signIn.loginSuccess') as string);
-
-  // Set everything in one go (localStorage + context)
   localStorage.setItem('authToken', data.token);
   localStorage.setItem('user-id', data.userId);
   localStorage.setItem('role', data.role);
-
-  // ✅ Make sure to update context with all 3 arguments
   setAuth(data.token, data.userId, data.role);
-
-  // Delay navigation slightly to allow context to update
   setTimeout(() => {
     if (data.role === 'super_admin') {
       navigate('/admin-dashboard');
@@ -67,7 +61,7 @@ const handleLoginSuccess = (data: any) => {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch('https://agrolink-updated-2-3.onrender.com/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -101,7 +95,7 @@ const handleLoginSuccess = (data: any) => {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login-with-otp', {
+      const response = await fetch('https://agrolink-updated-2-3.onrender.com/api/auth/login-with-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -137,7 +131,7 @@ const handleLoginSuccess = (data: any) => {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/verify-login-otp', {
+      const response = await fetch('https://agrolink-updated-2-3.onrender.com/api/auth/verify-login-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

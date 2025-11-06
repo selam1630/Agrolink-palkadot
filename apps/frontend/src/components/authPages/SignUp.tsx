@@ -54,7 +54,7 @@ const SignUp: React.FC = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register-with-otp', {
+      const response = await fetch('https://agrolink-updated-2-3.onrender.com/api/auth/register-with-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -90,7 +90,7 @@ const SignUp: React.FC = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/verify-registration-otp', {
+      const response = await fetch('https://agrolink-updated-2-3.onrender.com/api/auth/verify-registration-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
