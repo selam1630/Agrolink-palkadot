@@ -267,3 +267,7 @@
 2025-11-06T22:29:52.069587Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\frontend\\src\\context\\AuthContext.tsx")}
 2025-11-06T22:29:52.069685Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("group-1"), path: AnchoredSystemPathBuf("apps\\frontend") }}))
 2025-11-06T22:29:52.205659Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-06T22:29:58.257849Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\daemon\\8cfd9d948bd20797-turbo.log.2025-11-06")}
+2025-11-06T22:29:58.258130Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-06T22:36:33.262223Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\index.ts")}
+2025-11-06T22:36:33.262264Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
