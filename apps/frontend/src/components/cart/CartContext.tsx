@@ -41,7 +41,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
             setLoading(true);
             try {
-                const response = await fetch('https://agrolink-updated-2-5.onrender.com/api/cart', {
+                const response = await fetch('https://agrolink-updated-2-6.onrender.com/api/cart', {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     },
@@ -75,7 +75,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         setLoading(true);
         try {
-            const response = await fetch('https://agrolink-updated-2-5.onrender.com/api/cart', {
+            const response = await fetch('https://agrolink-updated-2-6.onrender.com/api/cart', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -108,7 +108,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     setLoading(true);
     try {
-        const response = await fetch(`https://agrolink-updated-2-5.onrender.com/api/cart/${productId}`, { 
+        const response = await fetch(`https://agrolink-updated-2-6.onrender.com/api/cart/${productId}`, { 
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -144,7 +144,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         setLoading(true);
         try {
-            const response = await fetch('https://agrolink-updated-2-5.onrender.com/api/cart', {
+            const response = await fetch('https://agrolink-updated-2-6.onrender.com/api/cart', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

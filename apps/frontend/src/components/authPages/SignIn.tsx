@@ -61,7 +61,7 @@ const handleLoginSuccess = (data: any) => {
     };
 
     try {
-      const response = await fetch('https://agrolink-updated-2-5.onrender.com/api/auth/login', {
+      const response = await fetch('https://agrolink-updated-2-6.onrender.com/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ const handleLoginSuccess = (data: any) => {
     };
 
     try {
-      const response = await fetch('https://agrolink-updated-2-5.onrender.com/api/auth/login-with-otp', {
+      const response = await fetch('https://agrolink-updated-2-6.onrender.com/api/auth/login-with-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ const handleLoginSuccess = (data: any) => {
     };
 
     try {
-      const response = await fetch('https://agrolink-updated-2-5.onrender.com/api/auth/verify-login-otp', {
+      const response = await fetch('https://agrolink-updated-2-6.onrender.com/api/auth/verify-login-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

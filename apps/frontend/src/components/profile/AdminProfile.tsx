@@ -38,7 +38,7 @@ const AdminProfile: React.FC = () => {
   const fetchProfile = async () => {
     try {
       const res = await axios.get<AdminProfileResponse>(
-        `https://agrolink-updated-2-5.onrender.com/api/profile/${userId}`,
+        `https://agrolink-updated-2-6.onrender.com/api/profile/${userId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -69,7 +69,7 @@ const AdminProfile: React.FC = () => {
     setUpdating(true);
     try {
       const res = await axios.put(
-        `https://agrolink-updated-2-5.onrender.com/api/profile/${userId}`,
+        `https://agrolink-updated-2-6.onrender.com/api/profile/${userId}`,
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -96,7 +96,7 @@ const AdminProfile: React.FC = () => {
     }
     try {
       await axios.put(
-        `https://agrolink-updated-2-5.onrender.com/api/products/${editingProduct.id}`,
+        `https://agrolink-updated-2-6.onrender.com/api/products/${editingProduct.id}`,
         {
           price: newPrice,
           name: editingProduct.name,
@@ -114,7 +114,7 @@ const AdminProfile: React.FC = () => {
   const handleDeleteProduct = async (productId: string) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
-        await axios.delete(`https://agrolink-updated-2-5.onrender.com/api/products/${productId}`, {
+        await axios.delete(`https://agrolink-updated-2-6.onrender.com/api/products/${productId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         fetchProfile();

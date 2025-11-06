@@ -14,7 +14,7 @@ const CartPage: React.FC = () => {
         }
 
         try {
-            const response = await fetch('https://agrolink-updated-2-5.onrender.com/api/payment', {
+            const response = await fetch('https://agrolink-updated-2-6.onrender.com/api/payment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
