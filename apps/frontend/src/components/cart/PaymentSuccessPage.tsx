@@ -19,7 +19,7 @@ const PaymentSuccessPage: React.FC = () => {
 
     if (tx_ref) {
       console.log("Verifying payment for tx_ref:", tx_ref);
-      fetch(`http://localhost:5000/api/payment/verify?tx_ref=${tx_ref}`)
+      fetch(`https://agrolink-updated-2-5.onrender.com/api/payment/verify?tx_ref=${tx_ref}`)
         .then((res) => res.json())
         .then((data) => {
           console.log("Verification result:", data);

@@ -41,7 +41,7 @@ const RecordedProductsPage: React.FC = () => {
 
       setIsLoading(true);
       try {
-        const response = await fetch('https://agrolink-updated-2-4.onrender.com/api/farmer-products', {
+        const response = await fetch('https://agrolink-updated-2-5.onrender.com/api/farmer-products', {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.ok) {
@@ -63,7 +63,7 @@ const RecordedProductsPage: React.FC = () => {
   const handlePost = async (recordId: string) => {
     try {
       setPostingIds((prev) => [...prev, recordId]);
-      const response = await fetch('https://agrolink-updated-2-4.onrender.com/api/farmer-products/post', {
+      const response = await fetch('https://agrolink-updated-2-5.onrender.com/api/farmer-products/post', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -90,7 +90,7 @@ const RecordedProductsPage: React.FC = () => {
   const handlePostAll = async () => {
     try {
       setPostingAll(true);
-      const response = await fetch('https://agrolink-updated-2-4.onrender.com/api/farmer-products/post', {
+      const response = await fetch('https://agrolink-updated-2-5.onrender.com/api/farmer-products/post', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

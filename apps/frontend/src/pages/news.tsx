@@ -18,7 +18,7 @@ const PostsDisplayPage: React.FC = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("https://agrolink-updated-2-4.onrender.com/news"); // match your backend route
+        const response = await axios.get("https://agrolink-updated-2-5.onrender.com/news"); // match your backend route
         setPosts(response.data);
       } catch (err) {
         console.error("❌ Failed to fetch news:", err);

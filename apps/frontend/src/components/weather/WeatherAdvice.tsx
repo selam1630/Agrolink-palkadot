@@ -78,7 +78,7 @@ const WeatherDashboard: React.FC = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const res = await fetch("https://agrolink-updated-2-4.onrender.com/api/weather-prediction/advice-for-dashboard", {
+        const res = await fetch("https://agrolink-updated-2-5.onrender.com/api/weather-prediction/advice-for-dashboard", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...userLocation, language }),
