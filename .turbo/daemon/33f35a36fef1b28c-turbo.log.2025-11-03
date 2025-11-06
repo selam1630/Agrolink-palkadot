@@ -30,3 +30,220 @@
 2025-11-03T06:07:50.986984Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\cookies\\.turbo-cookie"), AnchoredSystemPathBuf(".turbo\\cookies")}
 2025-11-03T06:07:50.987258Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
 2025-11-03T06:07:50.977046Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-11-03T06:07:52.893580Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\daemon\\33f35a36fef1b28c-turbo.log.2025-11-03")}
+2025-11-03T06:07:52.893692Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-03T06:08:44.894138Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo"), AnchoredSystemPathBuf(".turbo\\cookies")}
+2025-11-03T06:08:44.894264Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-03T06:11:36.699852Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\sale_alert_69074f19b65aa8686e8e9dc6_1762150296643.mp3")}
+2025-11-03T06:11:36.699983Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T06:11:36.996430Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio")}
+2025-11-03T06:11:36.996462Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T06:11:36.996750Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T06:11:38.698567Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\sale_alert_69074f19b65aa8686e8e9dc6_1762150296643.mp3")}
+2025-11-03T06:11:38.698691Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T06:11:39.306230Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\sale_alert_69074f19b65aa8686e8e9dc6_1762150296643.mp3")}
+2025-11-03T06:11:39.306274Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T06:11:39.306498Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T06:13:51.286848Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\daemon\\33f35a36fef1b28c-turbo.log.2025-11-03")}
+2025-11-03T06:13:51.286971Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-03T11:44:30.083092Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-11-03T11:44:31.721277Z  WARN turborepo_filewatch: failed to remove cookie file failed to remove file `C:\Users\user\Downloads\AgroLink-auth\AgroLink-auth\.turbo\cookies\.turbo-cookie`
+2025-11-03T11:44:32.167924Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-11-03T12:35:33.212628Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo")}
+2025-11-03T12:35:33.886581Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-03T12:35:33.886859Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\cookies")}
+2025-11-03T12:35:33.886875Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-03T12:52:09.663674Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio"), AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762174329632.mp3")}
+2025-11-03T12:52:09.663733Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T12:52:12.623489Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762174329632.mp3")}
+2025-11-03T12:52:12.623553Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T12:52:12.623951Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T12:52:14.272148Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio"), AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762174334190.mp3")}
+2025-11-03T12:52:14.272238Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T12:52:14.853734Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762174334190.mp3")}
+2025-11-03T12:52:14.853882Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T13:09:09.321244Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\cookies\\.turbo-cookie"), AnchoredSystemPathBuf(".turbo\\cookies")}
+2025-11-03T13:09:09.321311Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-03T13:09:09.352267Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-11-03T13:09:10.522906Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\daemon\\33f35a36fef1b28c-turbo.log.2025-11-03")}
+2025-11-03T13:09:10.523011Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-03T13:09:11.023349Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo"), AnchoredSystemPathBuf(".turbo\\cookies")}
+2025-11-03T13:09:11.023442Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-03T13:13:50.825489Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762175629521.mp3")}
+2025-11-03T13:13:50.825693Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T13:13:52.455456Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio")}
+2025-11-03T13:13:52.455493Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T13:13:52.455765Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T13:13:55.923167Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762175629521.mp3")}
+2025-11-03T13:13:55.923284Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T13:13:56.998880Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762175629521.mp3")}
+2025-11-03T13:13:56.998947Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T13:13:56.999444Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T13:13:59.323905Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762175639268.mp3")}
+2025-11-03T13:13:59.324420Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T13:13:59.768038Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio")}
+2025-11-03T13:13:59.768090Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T13:13:59.768425Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T13:14:03.512741Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762175639268.mp3")}
+2025-11-03T13:14:03.513014Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T13:14:10.616366Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762175639268.mp3")}
+2025-11-03T13:14:10.616487Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T13:14:11.387138Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762175639268.mp3")}
+2025-11-03T13:14:11.387179Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T13:14:11.387439Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:09:20.614209Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762178960507.mp3")}
+2025-11-03T14:09:20.614478Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:09:22.895374Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio")}
+2025-11-03T14:09:22.895421Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:09:22.896042Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:09:23.868017Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762178960507.mp3")}
+2025-11-03T14:09:23.868094Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:09:27.226239Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762178960507.mp3")}
+2025-11-03T14:09:27.226273Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:09:27.226509Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:09:33.118838Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio"), AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762178973070.mp3")}
+2025-11-03T14:09:33.118888Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:09:35.020158Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762178973070.mp3")}
+2025-11-03T14:09:35.020261Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:09:35.868483Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762178973070.mp3")}
+2025-11-03T14:09:35.868527Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:09:35.868825Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:10:14.717495Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio"), AnchoredSystemPathBuf("apps\\backend\\public\\audio\\news_1762179014639.mp3")}
+2025-11-03T14:10:14.717685Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:12:08.553931Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\cookies"), AnchoredSystemPathBuf(".turbo\\cookies\\1.cookie")}
+2025-11-03T14:12:08.553995Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-03T14:12:08.681644Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\cookies"), AnchoredSystemPathBuf(".turbo\\cookies\\.turbo-cookie"), AnchoredSystemPathBuf(".turbo\\cookies\\1.cookie")}
+2025-11-03T14:12:08.681746Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-03T14:12:08.694641Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-11-03T14:12:09.657056Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\daemon\\33f35a36fef1b28c-turbo.log.2025-11-03")}
+2025-11-03T14:12:09.657131Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-03T14:12:11.251421Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\cookies"), AnchoredSystemPathBuf(".turbo")}
+2025-11-03T14:12:11.251523Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-03T14:15:31.673043Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio"), AnchoredSystemPathBuf("apps\\backend\\public\\audio\\news_1762179331560.mp3")}
+2025-11-03T14:15:31.673180Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:15:37.949668Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\news_1762179331560.mp3")}
+2025-11-03T14:15:37.949808Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:15:38.347131Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\news_1762179331560.mp3")}
+2025-11-03T14:15:38.347210Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:17:11.051386Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179430914.mp3"), AnchoredSystemPathBuf("apps\\backend\\public\\audio")}
+2025-11-03T14:17:11.051535Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:17:15.258396Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179430914.mp3")}
+2025-11-03T14:17:15.258546Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:17:15.657336Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179430914.mp3")}
+2025-11-03T14:17:15.657375Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:17:16.475532Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179430914.mp3")}
+2025-11-03T14:17:16.475578Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:17:16.475880Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:17:19.462710Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio"), AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179439392.mp3")}
+2025-11-03T14:17:19.462982Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:17:20.549533Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179439392.mp3")}
+2025-11-03T14:17:20.549584Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:17:21.449036Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179439392.mp3")}
+2025-11-03T14:17:21.449099Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:17:21.449633Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:17:21.653789Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179439392.mp3")}
+2025-11-03T14:17:21.654063Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:19:59.776749Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179599663.mp3")}
+2025-11-03T14:19:59.777058Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:20:00.472632Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio")}
+2025-11-03T14:20:00.472666Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:20:00.472858Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:20:03.064500Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179599663.mp3")}
+2025-11-03T14:20:03.064671Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:20:04.377445Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179599663.mp3")}
+2025-11-03T14:20:04.377523Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:20:04.377751Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:20:19.547147Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179619530.mp3")}
+2025-11-03T14:20:19.547202Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:20:20.063024Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio")}
+2025-11-03T14:20:20.063144Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:20:20.063393Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:20:24.756425Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179619530.mp3")}
+2025-11-03T14:20:24.756560Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:20:25.604251Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179619530.mp3")}
+2025-11-03T14:20:25.604337Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:20:25.604646Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:20:48.654484Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\news_1762179648640.mp3")}
+2025-11-03T14:20:48.654524Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:20:49.132541Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio")}
+2025-11-03T14:20:49.132628Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:20:49.133620Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:20:50.456248Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\news_1762179648640.mp3")}
+2025-11-03T14:20:50.456306Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:20:51.476433Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\news_1762179648640.mp3")}
+2025-11-03T14:20:51.476608Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:20:51.477710Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:22:48.673601Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio"), AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179768463.mp3")}
+2025-11-03T14:22:48.673690Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:22:52.054326Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179768463.mp3")}
+2025-11-03T14:22:52.054425Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:22:52.666460Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179768463.mp3")}
+2025-11-03T14:22:52.666576Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:22:53.092517Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179768463.mp3")}
+2025-11-03T14:22:53.092616Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:22:53.092993Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:22:56.052645Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio"), AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179775954.mp3")}
+2025-11-03T14:22:56.052693Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:22:56.748617Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179775954.mp3")}
+2025-11-03T14:22:56.748693Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:22:57.354308Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179775954.mp3")}
+2025-11-03T14:22:57.354336Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:22:57.354583Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:25:13.151428Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179913110.mp3")}
+2025-11-03T14:25:13.151655Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:25:13.685716Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio")}
+2025-11-03T14:25:13.685756Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:25:13.686129Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:25:15.751734Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179913110.mp3")}
+2025-11-03T14:25:15.751834Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:25:16.914272Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179913110.mp3")}
+2025-11-03T14:25:16.914573Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:25:16.914884Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:25:22.850115Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio"), AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179922794.mp3")}
+2025-11-03T14:25:22.850160Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:25:24.452178Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179922794.mp3")}
+2025-11-03T14:25:24.452206Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:25:24.990792Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762179922794.mp3")}
+2025-11-03T14:25:24.990827Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:25:24.991207Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:26:54.152672Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\news_1762180014053.mp3")}
+2025-11-03T14:26:54.160228Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:26:54.418371Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio")}
+2025-11-03T14:26:54.418396Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:26:54.418534Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:26:58.852547Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\news_1762180014053.mp3")}
+2025-11-03T14:26:58.853776Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:26:59.456402Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\news_1762180014053.mp3")}
+2025-11-03T14:26:59.456489Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:27:01.119854Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\news_1762180014053.mp3")}
+2025-11-03T14:27:01.119904Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:27:01.120264Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:28:46.559659Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762180126498.mp3")}
+2025-11-03T14:28:46.560470Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:28:46.873441Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio")}
+2025-11-03T14:28:46.873493Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:28:46.873772Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:28:48.251655Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762180126498.mp3")}
+2025-11-03T14:28:48.251702Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:28:48.953631Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762180126498.mp3")}
+2025-11-03T14:28:48.953658Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:28:48.953860Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:28:56.065457Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762180136045.mp3")}
+2025-11-03T14:28:56.065730Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:28:58.682646Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio"), AnchoredSystemPathBuf("apps\\backend\\public\\audio\\alert_1762180136045.mp3")}
+2025-11-03T14:28:58.682724Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:28:58.683003Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:30:22.652438Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio"), AnchoredSystemPathBuf("apps\\backend\\public\\audio\\sale_alert_69089a0300a27cd65d74b880_1762180222540.mp3")}
+2025-11-03T14:30:22.652566Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:30:28.247978Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\sale_alert_69089a0300a27cd65d74b880_1762180222540.mp3")}
+2025-11-03T14:30:28.248057Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:30:29.468791Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\sale_alert_69089a0300a27cd65d74b880_1762180222540.mp3")}
+2025-11-03T14:30:29.468900Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:30:29.469351Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-03T14:30:29.783254Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\sale_alert_69089a0300a27cd65d74b880_1762180222540.mp3")}
+2025-11-03T14:30:29.783306Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:30:50.652685Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio\\sale_alert_69089a0400a27cd65d74b881_1762180250530.mp3")}
+2025-11-03T14:30:50.652730Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:30:54.470669Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\public\\audio"), AnchoredSystemPathBuf("apps\\backend\\public\\audio\\sale_alert_69089a0400a27cd65d74b881_1762180250530.mp3")}
+2025-11-03T14:30:54.470729Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-03T14:30:54.471023Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun

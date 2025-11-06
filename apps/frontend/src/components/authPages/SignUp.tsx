@@ -21,7 +21,7 @@ const SignUp: React.FC = () => {
     phoneNumber: '',
     email: '',
     password: '',
-    role: 'farmer'
+    role: 'buyer'
   });
   const [otp, setOtp] = useState<string>('');
   const [step, setStep] = useState<'form' | 'otp'>('form');
