@@ -22,7 +22,7 @@ const FarmerAdviceDashboard: React.FC = () => {
   const [advice, setAdvice] = useState<AdviceResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const API_URL = "http://localhost:5000/api"; 
+  const API_URL = "https://agrolink-updated-2-4.onrender.com/api"; 
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -43,7 +43,7 @@ const ProductList: React.FC = () => {
 
             setIsLoading(true);
             try {
-                const response = await fetch('http://localhost:5000/api/products', {
+                const response = await fetch('https://agrolink-updated-2-4.onrender.com/api/products', {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     },

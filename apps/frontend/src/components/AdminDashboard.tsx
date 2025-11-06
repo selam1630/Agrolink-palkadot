@@ -67,7 +67,7 @@ const AdminDashboard: React.FC = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register-admin', {
+      const response = await fetch('https://agrolink-updated-2-4.onrender.com/api/auth/register-admin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

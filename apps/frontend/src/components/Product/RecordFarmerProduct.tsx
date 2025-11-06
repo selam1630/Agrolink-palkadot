@@ -67,7 +67,7 @@ const RecordFarmerProduct: React.FC = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/farmer-products/record", {
+      const response = await fetch("https://agrolink-updated-2-4.onrender.com/api/farmer-products/record", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

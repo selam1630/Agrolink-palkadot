@@ -25,7 +25,7 @@ const FertilizerAdvice: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+  const API_URL = import.meta.env.VITE_API_URL || "https://agrolink-updated-2-4.onrender.com/api";
   useEffect(() => {
     const fetchFarmers = async () => {
       if (!token) return;
