@@ -83,7 +83,7 @@ const Dashboard = () => {
 
                     try {
                         const weatherResponse = await axios.post<WeatherAdviceResponse>(
-                            'https://agrolink-updated-2-5.onrender.com/api/weather-prediction/advice-for-dashboard',
+                            'https://agrolink-updated-2-6.onrender.com/api/weather-prediction/advice-for-dashboard',
                             { lat: latitude, lon: longitude },
                             { headers: { 'Authorization': `Bearer ${token}` } }
                         );

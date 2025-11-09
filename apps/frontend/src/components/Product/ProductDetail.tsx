@@ -38,7 +38,7 @@ const ProductDetail: React.FC = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          `https://agrolink-updated-2-5.onrender.com/api/products/${id}`,
+          `https://agrolink-updated-2-6.onrender.com/api/products/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

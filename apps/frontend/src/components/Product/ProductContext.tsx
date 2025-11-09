@@ -44,7 +44,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
         console.log("Fetching products...");
         setIsLoading(true);
         try {
-            const response = await fetch('https://agrolink-updated-2-5.onrender.com/api/products', {
+            const response = await fetch('https://agrolink-updated-2-6.onrender.com/api/products', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 },

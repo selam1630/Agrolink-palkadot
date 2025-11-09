@@ -60,7 +60,7 @@ const AdminDashboard2: React.FC = () => {
     }
 
     try {
-      const response = await fetch('https://agrolink-updated-2-5.onrender.com/api/admin/farmers', {
+      const response = await fetch('https://agrolink-updated-2-6.onrender.com/api/admin/farmers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
