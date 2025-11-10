@@ -168,6 +168,17 @@ const SidebarLayout: React.FC = () => {
         
         {/* Admin-only: On-chain transactions */}
         {role === 'admin' ? (
+          <>
+          <Link
+            to="/admin-listings"
+            className={`flex items-center gap-3 px-3 py-3 rounded-lg ${transitionClass} ${
+              isActive('/admin-listings') ? `${activeBgClass} shadow-md` : `${hoverBgClass}`
+            }`}
+          >
+            <PackageIcon className="w-5 h-5" />
+            <span className="font-medium">List Products (On‑chain)</span>
+          </Link>
+
           <Link
             to="/admin-transactions"
             className={`flex items-center gap-3 px-3 py-3 rounded-lg ${transitionClass} ${
@@ -177,6 +188,7 @@ const SidebarLayout: React.FC = () => {
             <ClipboardListIcon className="w-5 h-5" />
             <span className="font-medium">On‑chain Tx</span>
           </Link>
+          </>
         ) : null}
 
       <div className="">
