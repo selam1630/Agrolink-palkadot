@@ -39,6 +39,13 @@ model User {
 model Product {
   id          String      @id @default(auto()) @map("_id") @db.ObjectId
   name        String
+  onchainId   Int?
+  seller      String?
+  onchainPrice String?
+  metadataUri String?
+  onchainTxHash String?
+  onchainLogIndex Int?
+  onchainBlockNumber Int?
   quantity    Int
   price       Float?
   description String?
@@ -204,4 +211,18 @@ model FarmerProductRecord {
 
   createdAt DateTime @default(now())
   isPosted  Boolean  @default(false)
+}
+
+// Record of on-chain marketplace transactions (ProductBought events)
+model OnchainTransaction {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  txHash           String   @unique
+  onchainProductId Int
+  buyer            String
+  seller           String?
+  amount           String
+  blockNumber      Int?
+  logIndex         Int?
+
+  createdAt DateTime @default(now())
 }

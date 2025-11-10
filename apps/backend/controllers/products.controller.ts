@@ -18,10 +18,40 @@ const getUserFromToken = (req: Request) => {
 };
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const products = await prisma.product.findMany({
-      include: { user: true },
-    });
-    return res.status(200).json(products);
+    const { onchainOnly } = req.query;
+
+    // fetch products and include user relation
+    const products = await prisma.product.findMany({ include: { user: true } });
+
+    // optionally filter to only on-chain products
+    const filtered = onchainOnly === "true"
+      ? products.filter(p => p.onchainId !== null && p.onchainId !== undefined)
+      : products;
+
+    // return products with on-chain fields (if present)
+    const shaped = filtered.map(p => ({
+      id: p.id,
+      name: p.name,
+      description: p.description,
+      quantity: p.quantity,
+      price: p.price,
+      imageUrl: p.imageUrl,
+      user: p.user,
+      isSold: p.isSold ?? false,
+      status: p.status ?? null,
+      // on-chain metadata
+      onchainId: p.onchainId ?? null,
+      seller: p.seller ?? null,
+      onchainPrice: p.onchainPrice ?? null,
+      metadataUri: p.metadataUri ?? null,
+      onchainTxHash: p.onchainTxHash ?? null,
+      onchainLogIndex: p.onchainLogIndex ?? null,
+      onchainBlockNumber: p.onchainBlockNumber ?? null,
+      createdAt: p.createdAt,
+      updatedAt: p.updatedAt,
+    }));
+
+    return res.status(200).json(shaped);
   } catch (error) {
     console.error("Error fetching all products:", error);
     return res.status(500).json({ error: "Server error fetching products." });
@@ -37,7 +67,28 @@ export const getProductById = async (req: Request, res: Response) => {
     if (!product) {
       return res.status(404).json({ error: "Product not found." });
     }
-    return res.status(200).json(product);
+    // shape response to explicitly expose on-chain fields
+    const shaped = {
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      quantity: product.quantity,
+      price: product.price,
+      imageUrl: product.imageUrl,
+      user: product.user,
+      isSold: product.isSold ?? false,
+      status: product.status ?? null,
+      onchainId: product.onchainId ?? null,
+      seller: product.seller ?? null,
+      onchainPrice: product.onchainPrice ?? null,
+      metadataUri: product.metadataUri ?? null,
+      onchainTxHash: product.onchainTxHash ?? null,
+      onchainLogIndex: product.onchainLogIndex ?? null,
+      onchainBlockNumber: product.onchainBlockNumber ?? null,
+      createdAt: product.createdAt,
+      updatedAt: product.updatedAt,
+    };
+    return res.status(200).json(shaped);
   } catch (error) {
     console.error("Error fetching product by ID:", error);
     return res.status(500).json({ error: "Server error fetching product." });

@@ -23,6 +23,11 @@ interface Product {
   isSold: boolean;
   farmerName: string;
   farmerPhone: string;
+    // on-chain metadata (optional)
+    onchainId?: number | null;
+    seller?: string | null;
+    onchainPrice?: string | null; // in GLMR as string (formatted ether)
+    metadataUri?: string | null;
 }
 
 
@@ -33,6 +38,10 @@ const ProductList: React.FC = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const getErrorMessage = (err: unknown) => {
+        if (err instanceof Error) return err.message;
+        return String(err);
+    };
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -43,7 +52,7 @@ const ProductList: React.FC = () => {
 
             setIsLoading(true);
             try {
-                const response = await fetch('https://agrolink-updated-2-6.onrender.com/api/products', {
+                const response = await fetch('http://localhost:5000/api/products', {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     },
@@ -56,8 +65,8 @@ const ProductList: React.FC = () => {
                 const data = await response.json();
 setProducts(data.filter((p: Product) => !p.isSold));
 
-            } catch (err: any) {
-                setError(err.message);
+            } catch (err: unknown) {
+                setError(getErrorMessage(err));
             } finally {
                 setIsLoading(false);
             }
@@ -67,6 +76,25 @@ setProducts(data.filter((p: Product) => !p.isSold));
 
     const handleAddToCart = (productId: string) => {
         addToCart(productId);
+    };
+
+    const [txStatus, setTxStatus] = useState<Record<string, string>>({});
+
+    const handleBuyOnChain = async (product: Product) => {
+        if (!product.onchainId) return alert('This product is not listed on-chain.');
+        try {
+            setTxStatus(prev => ({ ...prev, [product.id]: 'connecting' }));
+            const { buyOnchainProduct } = await import('../../lib/web3');
+            setTxStatus(prev => ({ ...prev, [product.id]: 'sending' }));
+            const res = await buyOnchainProduct(product.onchainId as number, product.onchainPrice ?? String(product.price ?? '0'));
+            console.log('tx result', res);
+            setTxStatus(prev => ({ ...prev, [product.id]: 'confirmed' }));
+            alert('Transaction sent: ' + res.hash);
+        } catch (err: unknown) {
+            console.error('Buy on-chain failed', err);
+            setTxStatus(prev => ({ ...prev, [product.id]: 'failed' }));
+            alert('Buy failed: ' + getErrorMessage(err));
+        }
     };
 
     const containerVariants: Variants = {
@@ -152,16 +180,35 @@ setProducts(data.filter((p: Product) => !p.isSold));
                                     <CardTitle className="text-xl font-bold">{product.name}</CardTitle>
                                 </CardHeader>
                                 <CardContent className="p-4 pt-0">
-                                    <p className="text-2xl font-bold text-green-700">
-                                        {product.price
-                                          ? t('productList.price', { price: product.price.toFixed(2) })
-                                          : t('productList.priceUnavailable')}
-                                    </p>
+                                                                                <p className="text-2xl font-bold text-green-700">
+                                                                                {product.onchainPrice
+                                                                                    ? `${product.onchainPrice} GLMR`
+                                                                                    : product.price
+                                                                                        ? t('productList.price', { price: product.price.toFixed(2) })
+                                                                                        : t('productList.priceUnavailable')}
+                                                                                </p>
                                     <p className="text-sm text-gray-500 mt-1">{t('productList.priceUnit')}</p>
 <div className="mt-3 text-sm text-gray-700">
   <p><span className="font-semibold">{t('productList.farmer')}:</span> {product.farmerName}</p>
   <p><span className="font-semibold">{t('productList.phone')}:</span> {product.farmerPhone}</p>
 </div>
+                                                                                                            {product.onchainId ? (
+                                                                                                                <div className="mt-3 flex items-center justify-between">
+                                                                                                                    <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">On‑chain #{product.onchainId}</span>
+                                                                                                                    <div className="flex items-center gap-2">
+                                                                                                                        <button
+                                                                                                                            className="text-white bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded text-sm"
+                                                                                                                            onClick={() => handleBuyOnChain(product)}
+                                                                                                                            disabled={product.isSold || txStatus[product.id] === 'sending' || txStatus[product.id] === 'connecting'}
+                                                                                                                        >
+                                                                                                                            {product.isSold ? 'Sold' : (txStatus[product.id] === 'sending' || txStatus[product.id] === 'connecting') ? 'Processing...' : 'Buy on chain'}
+                                                                                                                        </button>
+                                                                                                                        {txStatus[product.id] ? (
+                                                                                                                            <span className="text-sm text-gray-600">{txStatus[product.id]}</span>
+                                                                                                                        ) : null}
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            ) : null}
                                 </CardContent>
                                 <CardFooter className="p-4 pt-0">
                                     {isProductInCart ? (

@@ -29,23 +29,64 @@ async function main() {
   if (useWebSocket) {
     contract.on('ProductListed', async (productId: any, seller: string, price: any, metadataURI: string, event: any) => {
       try {
-        // Convert the productId to BigInt
-        const pid = BigInt("0x" + productId.toString());  // Use 0x for hex representation if needed
+        const pid = Number(productId?.toString());
         const priceEth = ethers.formatEther(price);
-        console.log(`ProductListed - id:${pid.toString()} seller:${seller} price:${priceEth} metadata:${metadataURI}`);
+        const txHash = event?.transactionHash ?? event?.transaction?.hash;
+        const logIndex = typeof event?.logIndex !== 'undefined' ? Number(event.logIndex) : undefined;
+        const blockNumber = typeof event?.blockNumber !== 'undefined' ? Number(event.blockNumber) : undefined;
 
-        await prisma.product.create({
-          data: {
-            name: `onchain#${pid.toString()}`,
-            quantity: 1,
-            price: parseFloat(priceEth),
-            description: `On-chain listing by ${seller}`,
-            imageUrl: metadataURI,
-            status: 'available',
-            isSold: false
+        console.log(`ProductListed - id:${pid} seller:${seller} price:${priceEth} metadata:${metadataURI} tx:${txHash}`);
+
+        const nameMatcher = `onchain#${pid}`;
+
+        // Check for existing record with same onchainId
+        const existing = await prisma.product.findFirst({ where: { onchainId: pid } as any });
+        if (existing) {
+          // If same event already stored, skip
+          if (existing.onchainTxHash === txHash && existing.onchainLogIndex === logIndex) {
+            console.log('Duplicate ProductListed event detected, skipping', txHash, logIndex);
+          } else {
+            const updated = await prisma.product.updateMany({
+              where: { onchainId: pid } as any,
+              data: {
+                name: nameMatcher,
+                quantity: 1,
+                price: parseFloat(priceEth),
+                description: `On-chain listing by ${seller}`,
+                imageUrl: metadataURI,
+                status: 'available',
+                isSold: false,
+                seller: seller,
+                onchainPrice: priceEth,
+                metadataUri: metadataURI,
+                onchainTxHash: txHash,
+                onchainLogIndex: logIndex,
+                onchainBlockNumber: blockNumber
+              }
+            });
+            console.log('Updated existing product with onchain id', pid, 'updatedCount=', updated.count);
           }
-        });
-        console.log('Inserted product in DB for onchain id', pid.toString());
+        } else {
+          await prisma.product.create({
+            data: {
+              name: nameMatcher,
+              onchainId: pid,
+              quantity: 1,
+              price: parseFloat(priceEth),
+              description: `On-chain listing by ${seller}`,
+              imageUrl: metadataURI,
+              status: 'available',
+              isSold: false,
+              seller: seller,
+              onchainPrice: priceEth,
+              metadataUri: metadataURI,
+              onchainTxHash: txHash,
+              onchainLogIndex: logIndex,
+              onchainBlockNumber: blockNumber
+            }
+          });
+          console.log('Inserted product in DB for onchain id', pid);
+        }
       } catch (err) {
         console.error('Error handling ProductListed', err);
       }
@@ -53,20 +94,51 @@ async function main() {
 
     contract.on('ProductBought', async (productId: any, buyer: string, price: any, event: any) => {
       try {
-        // Convert the productId to BigInt
-        const pid = BigInt("0x" + productId.toString());
-        console.log(`ProductBought - id:${pid.toString()} buyer:${buyer}`);
+        const pid = Number(productId?.toString());
+        const txHash = event?.transactionHash ?? event?.transaction?.hash;
+        const logIndex = typeof event?.logIndex !== 'undefined' ? Number(event.logIndex) : undefined;
+        const blockNumber = typeof event?.blockNumber !== 'undefined' ? Number(event.blockNumber) : undefined;
+        const amount = typeof price !== 'undefined' ? ethers.formatEther(price) : undefined;
 
-        const nameMatcher = `onchain#${pid.toString()}`;
-        const updated = await prisma.product.updateMany({
-          where: { name: nameMatcher, isSold: false },
-          data: { isSold: true, status: 'sold' }
-        });
+        console.log(`ProductBought - id:${pid} buyer:${buyer} tx:${txHash}`);
 
-        if (updated.count > 0) {
-          console.log(`Marked ${updated.count} product(s) as sold for onchain id ${pid.toString()}`);
+        const existing = await prisma.product.findFirst({ where: { onchainId: pid } as any });
+        if (existing) {
+          const updated = await prisma.product.updateMany({
+            where: { onchainId: pid } as any,
+            data: {
+              isSold: true,
+              status: 'sold',
+              onchainTxHash: txHash,
+              onchainLogIndex: logIndex,
+              onchainBlockNumber: blockNumber
+            }
+          });
+          console.log('Marked product as sold for onchain id', pid, 'updatedCount=', updated.count);
+          // create an onchain transaction record (dedupe by txHash)
+          try {
+            const existingTx = await prisma.onchainTransaction.findUnique({ where: { txHash } as any });
+            if (!existingTx) {
+              await prisma.onchainTransaction.create({
+                data: {
+                  txHash: txHash ?? '',
+                  onchainProductId: pid,
+                  buyer: buyer,
+                  seller: existing.seller ?? undefined,
+                  amount: amount ?? '',
+                  blockNumber: blockNumber ?? undefined,
+                  logIndex: logIndex ?? undefined,
+                }
+              });
+              console.log('Created onchain transaction record for tx', txHash);
+            } else {
+              console.log('Onchain transaction already exists for tx', txHash);
+            }
+          } catch (txErr) {
+            console.error('Failed creating onchain transaction record', txErr);
+          }
         } else {
-          console.log('No matching local product found to mark as sold for onchain id', pid.toString());
+          console.log('No matching local product found to mark as sold for onchain id', pid);
         }
       } catch (err) {
         console.error('Error handling ProductBought', err);
@@ -74,7 +146,22 @@ async function main() {
     });
   } else {
     console.log('RPC does not support subscriptions reliably; running in polling mode (queryFilter).');
-    let lastCheckedBlock = await provider.getBlockNumber();
+    // Allow an environment-configured start block so the watcher can catch up historical events
+    let lastCheckedBlock: number;
+    const startBlockEnv = process.env.BLOCKCHAIN_START_BLOCK;
+    if (startBlockEnv) {
+      const parsed = Number(startBlockEnv);
+      if (!Number.isNaN(parsed) && parsed >= 0) {
+        // set lastCheckedBlock to start-1 so the first query covers start..latest
+        lastCheckedBlock = parsed - 1;
+        console.log('Starting poller from configured BLOCKCHAIN_START_BLOCK =', parsed);
+      } else {
+        console.warn('Invalid BLOCKCHAIN_START_BLOCK value:', startBlockEnv, 'falling back to current block');
+        lastCheckedBlock = await provider.getBlockNumber();
+      }
+    } else {
+      lastCheckedBlock = await provider.getBlockNumber();
+    }
 
     const pollIntervalMs = Number(process.env.BLOCKCHAIN_POLL_INTERVAL_MS || 10_000);
 
@@ -95,25 +182,64 @@ async function main() {
           try {
             const evAny: any = ev as any;
             const args: any = evAny.args ?? evAny;
-            const pid = BigInt("0x" + (args?.productId?.toString() ?? String(args?.[0])));
+            const pid = Number(args?.productId?.toString() ?? String(args?.[0] ?? '0'));
             const seller = args?.seller ?? args?.[1];
             const price = args?.price ?? args?.[2];
             const metadataURI = args?.metadataURI ?? args?.[3];
+            const txHash = evAny.transactionHash ?? evAny.transaction?.hash;
+            const logIndex = typeof evAny.logIndex !== 'undefined' ? Number(evAny.logIndex) : undefined;
+            const blockNumber = typeof evAny.blockNumber !== 'undefined' ? Number(evAny.blockNumber) : undefined;
 
             const priceEth = ethers.formatEther(price);
-            console.log(`ProductListed (poll) - id:${pid.toString()} seller:${seller} price:${priceEth} metadata:${metadataURI}`);
+            console.log(`ProductListed (poll) - id:${pid} seller:${seller} price:${priceEth} metadata:${metadataURI} tx:${txHash}`);
 
-            await prisma.product.create({
-              data: {
-                name: `onchain#${pid.toString()}`,
-                quantity: 1,
-                price: parseFloat(priceEth),
-                description: `On-chain listing by ${seller}`,
-                imageUrl: metadataURI,
-                status: 'available',
-                isSold: false
+            const existing = await prisma.product.findFirst({ where: { onchainId: pid } as any });
+            const nameMatcher = `onchain#${pid}`;
+            if (existing) {
+              if (existing.onchainTxHash === txHash && existing.onchainLogIndex === logIndex) {
+                console.log('Duplicate ProductListed (poll) event detected, skipping', txHash, logIndex);
+              } else {
+                const updated = await prisma.product.updateMany({
+                  where: { onchainId: pid } as any,
+                  data: {
+                    name: nameMatcher,
+                    quantity: 1,
+                    price: parseFloat(priceEth),
+                    description: `On-chain listing by ${seller}`,
+                    imageUrl: metadataURI,
+                    status: 'available',
+                    isSold: false,
+                    seller: seller,
+                    onchainPrice: priceEth,
+                    metadataUri: metadataURI,
+                    onchainTxHash: txHash,
+                    onchainLogIndex: logIndex,
+                    onchainBlockNumber: blockNumber
+                  }
+                });
+                console.log('Updated existing product (poll) with onchain id', pid, 'updatedCount=', updated.count);
               }
-            });
+            } else {
+              await prisma.product.create({
+                data: {
+                  name: nameMatcher,
+                  onchainId: pid,
+                  quantity: 1,
+                  price: parseFloat(priceEth),
+                  description: `On-chain listing by ${seller}`,
+                  imageUrl: metadataURI,
+                  status: 'available',
+                  isSold: false,
+                  seller: seller,
+                  onchainPrice: priceEth,
+                  metadataUri: metadataURI,
+                  onchainTxHash: txHash,
+                  onchainLogIndex: logIndex,
+                  onchainBlockNumber: blockNumber
+                }
+              });
+              console.log('Inserted product in DB for onchain id', pid);
+            }
           } catch (e) {
             console.error('Error processing ProductListed (poll)', e);
           }
@@ -125,20 +251,51 @@ async function main() {
           try {
             const evAny: any = ev as any;
             const args: any = evAny.args ?? evAny;
-            const pid = BigInt("0x" + (args?.productId?.toString() ?? String(args?.[0])));
+            const pid = Number(args?.productId?.toString() ?? String(args?.[0] ?? '0'));
             const buyer = args?.buyer ?? args?.[1];
-            console.log(`ProductBought (poll) - id:${pid.toString()} buyer:${buyer}`);
+            const txHash = evAny.transactionHash ?? evAny.transaction?.hash;
+            const logIndex = typeof evAny.logIndex !== 'undefined' ? Number(evAny.logIndex) : undefined;
+            const blockNumber = typeof evAny.blockNumber !== 'undefined' ? Number(evAny.blockNumber) : undefined;
+            console.log(`ProductBought (poll) - id:${pid} buyer:${buyer} tx:${txHash}`);
 
-            const nameMatcher = `onchain#${pid.toString()}`;
-            const updated = await prisma.product.updateMany({
-              where: { name: nameMatcher, isSold: false },
-              data: { isSold: true, status: 'sold' }
-            });
-
-            if (updated.count > 0) {
-              console.log(`Marked ${updated.count} product(s) as sold for onchain id ${pid.toString()}`);
+            const existing = await prisma.product.findFirst({ where: { onchainId: pid } as any });
+            if (existing) {
+              const updated = await prisma.product.updateMany({
+                where: { onchainId: pid } as any,
+                data: {
+                  isSold: true,
+                  status: 'sold',
+                  onchainTxHash: txHash,
+                  onchainLogIndex: logIndex,
+                  onchainBlockNumber: blockNumber
+                }
+              });
+              console.log('Marked product as sold for onchain id', pid, 'updatedCount=', updated.count);
+              // record transaction in DB
+              try {
+                const amount = (typeof evAny.args?.price !== 'undefined') ? ethers.formatEther(evAny.args.price) : '';
+                const existingTx = await prisma.onchainTransaction.findUnique({ where: { txHash } as any });
+                if (!existingTx) {
+                  await prisma.onchainTransaction.create({
+                    data: {
+                      txHash: txHash ?? '',
+                      onchainProductId: pid,
+                      buyer: buyer,
+                      seller: existing.seller ?? undefined,
+                      amount: amount ?? '',
+                      blockNumber: blockNumber ?? undefined,
+                      logIndex: logIndex ?? undefined,
+                    }
+                  });
+                  console.log('Created onchain transaction record for tx (poll)', txHash);
+                } else {
+                  console.log('Onchain transaction already exists for tx (poll)', txHash);
+                }
+              } catch (txErr) {
+                console.error('Failed creating onchain transaction record (poll)', txErr);
+              }
             } else {
-              console.log('No matching local product found to mark as sold for onchain id', pid.toString());
+              console.log('No matching local product found to mark as sold for onchain id', pid);
             }
           } catch (e) {
             console.error('Error processing ProductBought (poll)', e);

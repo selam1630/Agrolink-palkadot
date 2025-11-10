@@ -17,6 +17,12 @@ type Product = {
     name: string;
     phone: string;
   };
+  // on-chain metadata
+  onchainId?: number | null;
+  seller?: string | null;
+  onchainPrice?: string | null; // formatted ether string (GLMR)
+  metadataUri?: string | null;
+  isSold?: boolean;
 };
 
 const ProductDetail: React.FC = () => {
@@ -27,6 +33,11 @@ const ProductDetail: React.FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const getErrorMessage = (err: unknown) => {
+    if (err instanceof Error) return err.message;
+    return String(err);
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -53,8 +64,9 @@ const ProductDetail: React.FC = () => {
         }
         const data = await response.json();
         setProduct(data);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        const msg = getErrorMessage(err);
+        setError(msg);
       } finally {
         setLoading(false);
       }
@@ -66,6 +78,25 @@ const ProductDetail: React.FC = () => {
     if (product) {
       addToCart(product.id);
       console.log(`${product.name} added to cart!`);
+    }
+  };
+
+  const [txStatus, setTxStatus] = useState<'idle'|'connecting'|'sending'|'confirmed'|'failed'>('idle');
+
+  const handleBuyOnChain = async () => {
+    if (!product?.onchainId) return alert('This product is not listed on-chain.');
+    try {
+      setTxStatus('connecting');
+      const { buyOnchainProduct } = await import('../../lib/web3');
+      setTxStatus('sending');
+      const res = await buyOnchainProduct(product.onchainId as number, product.onchainPrice ?? String(product.price ?? '0'));
+      console.log('tx result', res);
+      setTxStatus('confirmed');
+      alert('Transaction sent: ' + res.hash);
+    } catch (err: unknown) {
+      console.error('Buy on-chain failed', err);
+      setTxStatus('failed');
+      alert('Buy failed: ' + getErrorMessage(err));
     }
   };
 
@@ -114,7 +145,7 @@ const ProductDetail: React.FC = () => {
               {product.name}
             </h1>
             <p className="text-2xl font-bold text-green-700 mb-4">
-              ETB {product.price.toFixed(2)}
+              {product.onchainPrice ? `${product.onchainPrice} GLMR` : `ETB ${product.price.toFixed(2)}`}
             </p>
             <p className="text-gray-600 mb-6 flex-1">
               {product.description || t("product.detail.noDescription")}
@@ -165,6 +196,20 @@ const ProductDetail: React.FC = () => {
                   <ShoppingCart size={20} /> {t("product.detail.addToCart")}
                 </Button>
               )}
+              {product?.onchainId ? (
+                <>
+                  <Button
+                    className="flex items-center gap-2 w-full bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors duration-300 font-medium"
+                    onClick={handleBuyOnChain}
+                    disabled={product.isSold || txStatus !== 'idle'}
+                  >
+                    {product.isSold ? 'Sold' : (txStatus === 'connecting' || txStatus === 'sending') ? 'Processing...' : 'Buy on chain'}
+                  </Button>
+                  {txStatus !== 'idle' ? (
+                    <div className="text-sm text-gray-600 mt-2">Status: {txStatus}</div>
+                  ) : null}
+                </>
+              ) : null}
               <Link to="/products">
                 <Button
                   variant="outline"
