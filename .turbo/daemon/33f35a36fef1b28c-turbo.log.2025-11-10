@@ -1,0 +1,45 @@
+2025-11-10T00:15:49.144256Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\src\\blockchain\\watcher.ts")}
+2025-11-10T00:15:49.144833Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-10T00:15:50.812403Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\daemon\\33f35a36fef1b28c-turbo.log.2025-11-10"), AnchoredSystemPathBuf(".turbo\\daemon\\33f35a36fef1b28c-turbo.log.2025-11-09")}
+2025-11-10T00:15:50.812443Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-10T00:15:51.095986Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\daemon")}
+2025-11-10T00:15:51.096063Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-10T00:18:11.093863Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("package-lock.json")}
+2025-11-10T00:18:11.093937Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-10T00:18:11.194343Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("package-lock.json")}
+2025-11-10T00:18:11.194383Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-10T00:19:49.905400Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\src\\blockchain\\watcher.ts")}
+2025-11-10T00:19:49.905447Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-10T00:19:58.190328Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\src\\blockchain\\watcher.ts")}
+2025-11-10T00:19:58.190450Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-10T00:19:58.482910Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-10T00:19:58.488561Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\src\\blockchain\\watcher.ts")}
+2025-11-10T00:19:58.488588Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-10T00:19:58.488923Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-10T00:22:56.804493Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\src\\blockchain\\watcher.ts")}
+2025-11-10T00:22:56.804551Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-10T00:24:04.196309Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\src\\blockchain\\watcher.ts")}
+2025-11-10T00:24:04.196343Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-10T00:24:05.677883Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-10T00:25:10.305249Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\src\\blockchain\\watcher.ts")}
+2025-11-10T00:25:10.305286Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-10T00:25:14.225984Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-10T00:25:14.226217Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\src\\blockchain\\watcher.ts")}
+2025-11-10T00:25:14.226236Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-10T00:25:14.226405Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-10T00:25:19.196403Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\src\\blockchain\\watcher.ts")}
+2025-11-10T00:25:19.196444Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-10T00:25:26.507064Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\src\\blockchain\\watcher.ts")}
+2025-11-10T00:25:26.507135Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-10T00:25:26.572361Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-10T00:27:06.898150Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("package-lock.json")}
+2025-11-10T00:27:06.898186Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-10T00:27:07.078311Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("package-lock.json")}
+2025-11-10T00:27:07.078342Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-10T00:28:05.191725Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\src\\blockchain\\watcher.ts")}
+2025-11-10T00:28:05.191840Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-10T00:30:33.621602Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\backend\\src\\blockchain\\watcher.ts")}
+2025-11-10T00:30:33.621707Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("backend"), path: AnchoredSystemPathBuf("apps\\backend") }}))
+2025-11-10T12:35:53.124889Z  WARN turborepo_filewatch: failed to remove cookie file failed to remove file `C:\Users\user\Downloads\AgroLink-auth\AgroLink-auth\.turbo\cookies\.turbo-cookie`
+2025-11-10T12:35:54.859282Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-11-10T12:36:10.661784Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\daemon\\33f35a36fef1b28c-turbo.log.2025-11-10")}
