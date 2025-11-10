@@ -118,6 +118,19 @@ const AdminSidebarLayout: React.FC = () => {
           <BarChart3Icon className="w-5 h-5" />
           <span className="font-medium">Analytics</span>
         </Link>
+
+        {/* On-chain transactions */}
+        <Link
+          to="/admin-transactions"
+          className={`flex items-center gap-3 px-3 py-3 rounded-lg ${transitionClass} ${
+            isActive("/admin-transactions")
+              ? `${activeBgClass} shadow-md`
+              : `${hoverBgClass}`
+          }`}
+        >
+          <ClipboardListIcon className="w-5 h-5" />
+          <span className="font-medium">On-chain Tx</span>
+        </Link>
       </nav>
 
       {/* Bottom Section */}

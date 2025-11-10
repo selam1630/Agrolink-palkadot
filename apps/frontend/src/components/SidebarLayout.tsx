@@ -21,13 +21,14 @@ import { useAuth } from "@/context/AuthContext";
 const SidebarLayout: React.FC = () => {
   const { t } = useTranslation();
   const location = useLocation();
-  const { signOut } = useAuth();
+  
   const isLoggedIn = true; 
   const isActive = (path: string) => location.pathname === path;
 
   const sidebarBgClass = "bg-green-800";
   const defaultTextClass = "text-green-100";
   const hoverBgClass = "hover:bg-green-700";
+  const { role } = useAuth();
   const activeBgClass = "bg-green-600 text-white";
   const transitionClass = "transition-all duration-300 ease-in-out";
 
@@ -165,6 +166,19 @@ const SidebarLayout: React.FC = () => {
           <span className="font-medium">{t("nav.calendar") || "Calendar"}</span>
         </Link>
         
+        {/* Admin-only: On-chain transactions */}
+        {role === 'admin' ? (
+          <Link
+            to="/admin-transactions"
+            className={`flex items-center gap-3 px-3 py-3 rounded-lg ${transitionClass} ${
+              isActive('/admin-transactions') ? `${activeBgClass} shadow-md` : `${hoverBgClass}`
+            }`}
+          >
+            <ClipboardListIcon className="w-5 h-5" />
+            <span className="font-medium">On‑chain Tx</span>
+          </Link>
+        ) : null}
+
       <div className="">
         © 2025 AgroLink. All rights reserved. • AgroLink v1.0
       </div>

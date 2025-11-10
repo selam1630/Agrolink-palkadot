@@ -16,6 +16,7 @@ import adminRoutes from "./routes/adminRoute";
 import newsRoutes from "./routes/newsRoute";
 import fertilizerRoutes from "./routes/fertilizerRoute";
 import farmerProductRecordRoutes from "./routes/farmerProductRecord.routes"
+import onchainRoutes from "./routes/onchain.route";
 
 const app = express();
 const allowedOrigins = [
@@ -53,6 +54,7 @@ app.use("/news", newsRoutes);
 app.use("/api/fertilizer", fertilizerRoutes);
 app.use("/audio", express.static(path.join(process.cwd(), "public", "audio")));
 app.use("/api/farmer-products", farmerProductRecordRoutes);
+app.use('/api/onchain/transactions', onchainRoutes);
 
 
 const PORT = 5000;

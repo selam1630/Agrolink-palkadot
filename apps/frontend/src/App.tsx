@@ -23,6 +23,7 @@ import FarmerProfile from "./components/profile/AdminProfile";
 import NewsPage from "./pages/news";
 import AdminDashboard from "./components/AdminDashboard";
 import AdminDashboard2 from "./components/Admin2Dashboard";
+import AdminTransactions from "./components/AdminTransactions";
 import NewPostingPage from "./pages/NewPostingPage";
 import FertilizerAdvice from "./components/advice/FertilizerAdvice"
 import FarmerAdviceDashboard from "./components/advice/fertlizerAdvice for dashbord";
@@ -54,6 +55,7 @@ function App() {
             <Route path="/disease-detection" element={<AdviceForm />} />
             <Route path="/my-advice" element={<FarmerAdviceDashboard />} />
             <Route path="/admin-dashboard2" element={<AdminDashboard2 />} />
+            <Route path="/admin-transactions" element={<AdminTransactions />} />
             <Route path="/weather-detector" element={<Weather />} />
             <Route path="/new-posting" element={<NewPostingPage />} />
             <Route path="/fertilizer-advice" element={<FertilizerAdvice />} />

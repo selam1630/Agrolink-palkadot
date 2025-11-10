@@ -79,6 +79,7 @@ setProducts(data.filter((p: Product) => !p.isSold));
     };
 
     const [txStatus, setTxStatus] = useState<Record<string, string>>({});
+    const [txLinks, setTxLinks] = useState<Record<string, string>>({});
 
     const handleBuyOnChain = async (product: Product) => {
         if (!product.onchainId) return alert('This product is not listed on-chain.');
@@ -89,6 +90,7 @@ setProducts(data.filter((p: Product) => !p.isSold));
             const res = await buyOnchainProduct(product.onchainId as number, product.onchainPrice ?? String(product.price ?? '0'));
             console.log('tx result', res);
             setTxStatus(prev => ({ ...prev, [product.id]: 'confirmed' }));
+            if (res?.explorerUrl) setTxLinks(prev => ({ ...prev, [product.id]: res.explorerUrl }));
             alert('Transaction sent: ' + res.hash);
         } catch (err: unknown) {
             console.error('Buy on-chain failed', err);
@@ -205,6 +207,9 @@ setProducts(data.filter((p: Product) => !p.isSold));
                                                                                                                         </button>
                                                                                                                         {txStatus[product.id] ? (
                                                                                                                             <span className="text-sm text-gray-600">{txStatus[product.id]}</span>
+                                                                                                                        ) : null}
+                                                                                                                        {txLinks[product.id] ? (
+                                                                                                                            <a href={txLinks[product.id]} target="_blank" rel="noreferrer" className="text-sm text-blue-600 underline">View tx</a>
                                                                                                                         ) : null}
                                                                                                                     </div>
                                                                                                                 </div>

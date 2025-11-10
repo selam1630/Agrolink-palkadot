@@ -29,7 +29,7 @@ const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
   const { cartItems, addToCart } = useCart();
-  const { token, loading: authLoading } = useAuth();
+  const { token, loading: authLoading, role } = useAuth();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +49,7 @@ const ProductDetail: React.FC = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          `https://agrolink-updated-2-6.onrender.com/api/products/${id}`,
+          `http://localhost:5000/api/products/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -82,6 +82,10 @@ const ProductDetail: React.FC = () => {
   };
 
   const [txStatus, setTxStatus] = useState<'idle'|'connecting'|'sending'|'confirmed'|'failed'>('idle');
+  const [txLink, setTxLink] = useState<string | null>(null);
+
+  const [listStatus, setListStatus] = useState<'idle'|'connecting'|'sending'|'confirmed'|'failed'>('idle');
+  const [listLink, setListLink] = useState<string | null>(null);
 
   const handleBuyOnChain = async () => {
     if (!product?.onchainId) return alert('This product is not listed on-chain.');
@@ -91,12 +95,32 @@ const ProductDetail: React.FC = () => {
       setTxStatus('sending');
       const res = await buyOnchainProduct(product.onchainId as number, product.onchainPrice ?? String(product.price ?? '0'));
       console.log('tx result', res);
-      setTxStatus('confirmed');
-      alert('Transaction sent: ' + res.hash);
+  setTxStatus('confirmed');
+  if (res?.explorerUrl) setTxLink(res.explorerUrl);
+  alert('Transaction sent: ' + res.hash);
     } catch (err: unknown) {
       console.error('Buy on-chain failed', err);
       setTxStatus('failed');
       alert('Buy failed: ' + getErrorMessage(err));
+    }
+  };
+
+  const handleListOnChain = async () => {
+    if (!product) return;
+    try {
+      setListStatus('connecting');
+      const { listOnchainProduct } = await import('../../lib/web3');
+      setListStatus('sending');
+      const metadataUri = product.metadataUri || product.imageUrl || '';
+      const price = product.onchainPrice ?? String(product.price ?? '0');
+      const res = await listOnchainProduct(metadataUri, price);
+      setListStatus('confirmed');
+      if (res?.explorerUrl) setListLink(res.explorerUrl);
+      alert('List transaction sent: ' + res.hash);
+    } catch (err: unknown) {
+      console.error('List on-chain failed', err);
+      setListStatus('failed');
+      alert('List failed: ' + getErrorMessage(err));
     }
   };
 
@@ -196,6 +220,26 @@ const ProductDetail: React.FC = () => {
                   <ShoppingCart size={20} /> {t("product.detail.addToCart")}
                 </Button>
               )}
+              {/* Admin: List on chain if not already listed */}
+              {role === 'admin' && !product?.onchainId ? (
+                <>
+                  <Button
+                    className="flex items-center gap-2 w-full bg-yellow-600 text-white rounded-xl hover:bg-yellow-700 transition-colors duration-300 font-medium"
+                    onClick={handleListOnChain}
+                    disabled={listStatus !== 'idle'}
+                  >
+                    {listStatus === 'sending' || listStatus === 'connecting' ? 'Listing...' : 'List on chain'}
+                  </Button>
+                  {listStatus !== 'idle' ? (
+                    <div className="text-sm text-gray-600 mt-2">Status: {listStatus}</div>
+                  ) : null}
+                  {listLink ? (
+                    <div className="text-sm mt-2">
+                      <a href={listLink} target="_blank" rel="noreferrer" className="text-blue-600 underline">View list tx</a>
+                    </div>
+                  ) : null}
+                </>
+              ) : null}
               {product?.onchainId ? (
                 <>
                   <Button
@@ -207,6 +251,11 @@ const ProductDetail: React.FC = () => {
                   </Button>
                   {txStatus !== 'idle' ? (
                     <div className="text-sm text-gray-600 mt-2">Status: {txStatus}</div>
+                  ) : null}
+                  {txLink ? (
+                    <div className="text-sm mt-2">
+                      <a href={txLink} target="_blank" rel="noreferrer" className="text-blue-600 underline">View transaction</a>
+                    </div>
                   ) : null}
                 </>
               ) : null}
