@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
+import { apiPath } from '../../lib/api';
 import { useNavigate } from "react-router-dom";
 import { 
     User, Package, DollarSign, Phone, Banknote, MapPin, UploadCloud, Loader2,
@@ -68,7 +69,7 @@ const RecordFarmerProduct: React.FC = () => {
     };
 
     try {
-      const response = await fetch("https://agrolink-updated-2-6.onrender.com/api/farmer-products/record", {
+      const response = await fetch(apiPath('/farmer-products/record'), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

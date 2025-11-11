@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { apiPath } from '../../lib/api';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -7,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Check, Upload } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { Variants } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
@@ -41,7 +42,7 @@ const RecordedProductsPage: React.FC = () => {
 
       setIsLoading(true);
       try {
-        const response = await fetch('https://agrolink-updated-2-6.onrender.com/api/farmer-products', {
+    const response = await fetch(apiPath('/farmer-products'), {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.ok) {
@@ -50,8 +51,8 @@ const RecordedProductsPage: React.FC = () => {
         }
         const data = await response.json();
         setRecords(data);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : String(err));
       } finally {
         setIsLoading(false);
       }
@@ -63,7 +64,7 @@ const RecordedProductsPage: React.FC = () => {
   const handlePost = async (recordId: string) => {
     try {
       setPostingIds((prev) => [...prev, recordId]);
-      const response = await fetch('https://agrolink-updated-2-6.onrender.com/api/farmer-products/post', {
+  const response = await fetch(apiPath('/farmer-products/post'), {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -80,8 +81,8 @@ const RecordedProductsPage: React.FC = () => {
         prev.map((r) => (r.id === recordId ? { ...r, isPosted: true } : r))
       );
       alert(data.message);
-    } catch (err: any) {
-      alert(err.message);
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : String(err));
     } finally {
       setPostingIds((prev) => prev.filter((id) => id !== recordId));
     }
@@ -90,7 +91,7 @@ const RecordedProductsPage: React.FC = () => {
   const handlePostAll = async () => {
     try {
       setPostingAll(true);
-      const response = await fetch('https://agrolink-updated-2-6.onrender.com/api/farmer-products/post', {
+      const response = await fetch(apiPath('/farmer-products/post'), {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -103,12 +104,10 @@ const RecordedProductsPage: React.FC = () => {
         throw new Error(errData.error || 'Failed to post all products');
       }
       const data = await response.json();
-      setRecords((prev) =>
-        prev.map((r) => (r.isPosted ? r : { ...r, isPosted: true }))
-      );
+      setRecords((prev) => prev.map((r) => (r.isPosted ? r : { ...r, isPosted: true })));
       alert(data.message);
-    } catch (err: any) {
-      alert(err.message);
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : String(err));
     } finally {
       setPostingAll(false);
     }

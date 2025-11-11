@@ -26,6 +26,15 @@ async function main() {
 
   console.log('Connected to contract at', CONTRACT_ADDRESS, `(provider: ${useWebSocket ? 'websocket' : 'http/polling'})`);
 
+  // Ensure Prisma is connected early so DB writes don't fail silently later
+  try {
+    await prisma.$connect();
+    console.log('Prisma client connected successfully');
+  } catch (connErr) {
+    console.error('Failed to connect Prisma client in watcher', connErr);
+    // don't exit; let subsequent DB calls surface errors, but warn loudly
+  }
+
   if (useWebSocket) {
     contract.on('ProductListed', async (productId: any, seller: string, price: any, metadataURI: string, event: any) => {
       try {
@@ -46,31 +55,8 @@ async function main() {
           if (existing.onchainTxHash === txHash && existing.onchainLogIndex === logIndex) {
             console.log('Duplicate ProductListed event detected, skipping', txHash, logIndex);
           } else {
-            const updated = await prisma.product.updateMany({
-              where: { onchainId: pid } as any,
-              data: {
-                name: nameMatcher,
-                quantity: 1,
-                price: parseFloat(priceEth),
-                description: `On-chain listing by ${seller}`,
-                imageUrl: metadataURI,
-                status: 'available',
-                isSold: false,
-                seller: seller,
-                onchainPrice: priceEth,
-                metadataUri: metadataURI,
-                onchainTxHash: txHash,
-                onchainLogIndex: logIndex,
-                onchainBlockNumber: blockNumber
-              }
-            });
-            console.log('Updated existing product with onchain id', pid, 'updatedCount=', updated.count);
-          }
-        } else {
-          await prisma.product.create({
-            data: {
+            const updateData = {
               name: nameMatcher,
-              onchainId: pid,
               quantity: 1,
               price: parseFloat(priceEth),
               description: `On-chain listing by ${seller}`,
@@ -83,9 +69,39 @@ async function main() {
               onchainTxHash: txHash,
               onchainLogIndex: logIndex,
               onchainBlockNumber: blockNumber
+            };
+            console.log('Updating product where onchainId=', pid, 'with', updateData);
+            try {
+              const updated = await prisma.product.updateMany({ where: { onchainId: pid } as any, data: updateData });
+              console.log('Updated existing product with onchain id', pid, 'updatedCount=', updated.count);
+            } catch (updErr) {
+              console.error('Failed updating product for onchain id', pid, (updErr as any)?.stack ?? updErr);
             }
-          });
-          console.log('Inserted product in DB for onchain id', pid);
+          }
+        } else {
+          const createData = {
+            name: nameMatcher,
+            onchainId: pid,
+            quantity: 1,
+            price: parseFloat(priceEth),
+            description: `On-chain listing by ${seller}`,
+            imageUrl: metadataURI,
+            status: 'available',
+            isSold: false,
+            seller: seller,
+            onchainPrice: priceEth,
+            metadataUri: metadataURI,
+            onchainTxHash: txHash,
+            onchainLogIndex: logIndex,
+            onchainBlockNumber: blockNumber
+          };
+          console.log('Creating product with data', createData);
+          try {
+            await prisma.product.create({ data: createData });
+            console.log('Inserted product in DB for onchain id', pid);
+          } catch (createErr) {
+            console.error('Failed creating product for onchain id', pid, (createErr as any)?.stack ?? createErr);
+          }
         }
       } catch (err) {
         console.error('Error handling ProductListed', err);
@@ -199,31 +215,8 @@ async function main() {
               if (existing.onchainTxHash === txHash && existing.onchainLogIndex === logIndex) {
                 console.log('Duplicate ProductListed (poll) event detected, skipping', txHash, logIndex);
               } else {
-                const updated = await prisma.product.updateMany({
-                  where: { onchainId: pid } as any,
-                  data: {
-                    name: nameMatcher,
-                    quantity: 1,
-                    price: parseFloat(priceEth),
-                    description: `On-chain listing by ${seller}`,
-                    imageUrl: metadataURI,
-                    status: 'available',
-                    isSold: false,
-                    seller: seller,
-                    onchainPrice: priceEth,
-                    metadataUri: metadataURI,
-                    onchainTxHash: txHash,
-                    onchainLogIndex: logIndex,
-                    onchainBlockNumber: blockNumber
-                  }
-                });
-                console.log('Updated existing product (poll) with onchain id', pid, 'updatedCount=', updated.count);
-              }
-            } else {
-              await prisma.product.create({
-                data: {
+                const updateData = {
                   name: nameMatcher,
-                  onchainId: pid,
                   quantity: 1,
                   price: parseFloat(priceEth),
                   description: `On-chain listing by ${seller}`,
@@ -236,9 +229,39 @@ async function main() {
                   onchainTxHash: txHash,
                   onchainLogIndex: logIndex,
                   onchainBlockNumber: blockNumber
+                };
+                console.log('Updating product (poll) where onchainId=', pid, 'with', updateData);
+                try {
+                  const updated = await prisma.product.updateMany({ where: { onchainId: pid } as any, data: updateData });
+                  console.log('Updated existing product (poll) with onchain id', pid, 'updatedCount=', updated.count);
+                } catch (updErr) {
+                  console.error('Failed updating product (poll) for onchain id', pid, (updErr as any)?.stack ?? updErr);
                 }
-              });
-              console.log('Inserted product in DB for onchain id', pid);
+              }
+            } else {
+              const createData = {
+                name: nameMatcher,
+                onchainId: pid,
+                quantity: 1,
+                price: parseFloat(priceEth),
+                description: `On-chain listing by ${seller}`,
+                imageUrl: metadataURI,
+                status: 'available',
+                isSold: false,
+                seller: seller,
+                onchainPrice: priceEth,
+                metadataUri: metadataURI,
+                onchainTxHash: txHash,
+                onchainLogIndex: logIndex,
+                onchainBlockNumber: blockNumber
+              };
+              console.log('Creating product (poll) with data', createData);
+              try {
+                await prisma.product.create({ data: createData });
+                console.log('Inserted product in DB for onchain id', pid);
+              } catch (createErr) {
+                console.error('Failed creating product (poll) for onchain id', pid, (createErr as any)?.stack ?? createErr);
+              }
             }
           } catch (e) {
             console.error('Error processing ProductListed (poll)', e);

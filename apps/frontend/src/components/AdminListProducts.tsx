@@ -21,6 +21,12 @@ const AdminListProducts: React.FC = () => {
   // per-product status and explorer link
   const [statusMap, setStatusMap] = useState<Record<string, string>>({});
   const [linkMap, setLinkMap] = useState<Record<string, string>>({});
+  // quick-list form state
+  const [quickName, setQuickName] = useState('');
+  const [quickPrice, setQuickPrice] = useState('0.1');
+  const [quickMetadata, setQuickMetadata] = useState('');
+  const [quickStatus, setQuickStatus] = useState<'idle'|'sending'|'confirmed'|'failed'>('idle');
+  const [quickLink, setQuickLink] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -59,11 +65,49 @@ const AdminListProducts: React.FC = () => {
       if (res?.explorerUrl) setLinkMap((m) => ({ ...m, [p.id]: res.explorerUrl }));
       // watcher will update the product record; optionally refresh list
       setTimeout(() => {
-        setProducts((prev) => prev.filter((x) => x.id !== p.id).concat(prev.filter((x) => x.id === p.id)));
-      }, 2000);
+        // refresh products after a short delay to allow watcher to ingest
+        (async () => {
+          if (!token) return;
+          try {
+            const res = await fetch(apiPath('/products?limit=200'), { headers: { Authorization: `Bearer ${token}` } });
+            if (res.ok) {
+              const data = await res.json();
+              setProducts(data.products || data || []);
+            }
+          } catch {
+            // ignore
+          }
+        })();
+      }, 4000);
     } catch (err: unknown) {
       setStatusMap((s) => ({ ...s, [p.id]: 'failed' }));
       console.error('List failed', err);
+    }
+  };
+
+  const handleQuickList = async () => {
+    try {
+      setQuickStatus('sending');
+      const { listOnchainProduct } = await import('../lib/web3');
+      const res = await listOnchainProduct(quickMetadata || '', quickPrice || '0');
+      setQuickStatus('confirmed');
+      if (res?.explorerUrl) setQuickLink(res.explorerUrl);
+      // refresh products after a short delay to let watcher ingest the event
+      setTimeout(async () => {
+        if (!token) return;
+        try {
+          const r = await fetch(apiPath('/products?limit=200'), { headers: { Authorization: `Bearer ${token}` } });
+          if (r.ok) {
+            const data = await r.json();
+            setProducts(data.products || data || []);
+          }
+        } catch (e) {
+          // ignore
+        }
+      }, 4000);
+    } catch (err) {
+      setQuickStatus('failed');
+      console.error('Quick list failed', err);
     }
   };
 
@@ -74,16 +118,33 @@ const AdminListProducts: React.FC = () => {
         <div className="text-sm text-gray-600">Select products and list them using your wallet</div>
       </div>
 
+      {/* Quick list form: allows admin to create an on-chain listing directly (watcher will ingest and create DB record) */}
+      <div className="mb-6 p-4 bg-white rounded shadow">
+        <h3 className="font-medium mb-2">Quick list a new on-chain product</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+          <input value={quickName} onChange={(e) => setQuickName(e.target.value)} placeholder="Name (optional)" className="px-3 py-2 border rounded" />
+          <input value={quickPrice} onChange={(e) => setQuickPrice(e.target.value)} placeholder="Price (GLMR)" className="px-3 py-2 border rounded" />
+          <input value={quickMetadata} onChange={(e) => setQuickMetadata(e.target.value)} placeholder="Metadata URI (ipfs://...)" className="px-3 py-2 border rounded" />
+        </div>
+        <div className="mt-3 flex items-center gap-3">
+          <button onClick={handleQuickList} disabled={quickStatus === 'sending'} className="px-4 py-2 bg-green-600 text-white rounded">
+            {quickStatus === 'sending' ? 'Listing…' : 'List on chain'}
+          </button>
+          {quickStatus !== 'idle' ? <span className="text-sm text-gray-600">Status: {quickStatus}</span> : null}
+          {quickLink ? <a href={quickLink} target="_blank" rel="noreferrer" className="text-blue-600 underline text-sm">View tx</a> : null}
+        </div>
+      </div>
+
       {loading ? (
         <div className="p-6 bg-white rounded shadow text-center">Loading products…</div>
       ) : error ? (
         <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded">{error}</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
           {products.map((p) => (
-            <div key={p.id} className="bg-white rounded-lg shadow p-4 flex flex-col">
+            <div key={p.id} className="bg-white rounded-lg shadow p-4 flex flex-col h-full min-h-[180px] overflow-hidden">
               <div className="flex items-start gap-4">
-                <img src={p.imageUrl} alt={p.name} className="w-20 h-20 object-cover rounded" />
+                <img src={p.imageUrl} alt={p.name} className="flex-none w-24 h-24 object-cover rounded" />
                 <div className="flex-1">
                   <div className="font-medium text-gray-900">{p.name}</div>
                   <div className="text-sm text-gray-600">Local price: ETB {p.price}</div>
@@ -91,9 +152,9 @@ const AdminListProducts: React.FC = () => {
                 </div>
               </div>
 
-              <div className="mt-3 flex items-center gap-2">
-                <input defaultValue={p.onchainPrice ?? String(p.price ?? '')} className="flex-1 px-3 py-2 border rounded" placeholder="On-chain price (GLMR)" id={`price-${p.id}`} />
-                <input defaultValue={p.metadataUri ?? ''} className="flex-1 px-3 py-2 border rounded" placeholder="metadata URI (optional)" id={`meta-${p.id}`} />
+              <div className="mt-3 flex flex-col md:flex-row items-stretch gap-2">
+                <input defaultValue={p.onchainPrice ?? String(p.price ?? '')} className="w-full md:flex-1 px-3 py-2 border rounded" placeholder="On-chain price (GLMR)" id={`price-${p.id}`} />
+                <input defaultValue={p.metadataUri ?? ''} className="w-full md:flex-1 px-3 py-2 border rounded" placeholder="metadata URI (optional)" id={`meta-${p.id}`} />
               </div>
 
               <div className="mt-3 flex items-center justify-between">
