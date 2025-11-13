@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import toast from 'react-hot-toast';
 import { useParams, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ShoppingCart, ArrowLeft, Check, Phone } from "lucide-react";
@@ -88,20 +89,39 @@ const ProductDetail: React.FC = () => {
   const [listLink, setListLink] = useState<string | null>(null);
 
   const handleBuyOnChain = async () => {
-    if (!product?.onchainId) return alert('This product is not listed on-chain.');
+    if (!product?.onchainId) {
+      toast.error('This product is not listed on-chain.');
+      return;
+    }
     try {
       setTxStatus('connecting');
       const { buyOnchainProduct } = await import('../../lib/web3');
       setTxStatus('sending');
       const res = await buyOnchainProduct(product.onchainId as number, product.onchainPrice ?? String(product.price ?? '0'));
       console.log('tx result', res);
-  setTxStatus('confirmed');
-  if (res?.explorerUrl) setTxLink(res.explorerUrl);
-  alert('Transaction sent: ' + res.hash);
+      setTxStatus('confirmed');
+      if (res?.explorerUrl) setTxLink(res.explorerUrl);
+      toast.success('Buy transaction confirmed', {
+        duration: 6000,
+      });
+      toast('View transaction', {
+        icon: '🔗',
+        duration: 10000,
+        action: {
+          // react-hot-toast doesn't support action in this way; instead provide link in subsequent toast
+        }
+      });
+      if (res?.explorerUrl) {
+        toast(() => (
+          <div>
+            <a href={res.explorerUrl} target="_blank" rel="noreferrer" className="text-blue-500 underline">View tx</a>
+          </div>
+        ), { duration: 10000 });
+      }
     } catch (err: unknown) {
       console.error('Buy on-chain failed', err);
       setTxStatus('failed');
-      alert('Buy failed: ' + getErrorMessage(err));
+      toast.error('Buy failed: ' + getErrorMessage(err));
     }
   };
 
@@ -116,11 +136,18 @@ const ProductDetail: React.FC = () => {
       const res = await listOnchainProduct(metadataUri, price);
       setListStatus('confirmed');
       if (res?.explorerUrl) setListLink(res.explorerUrl);
-      alert('List transaction sent: ' + res.hash);
+      toast.success('List transaction confirmed', { duration: 6000 });
+      if (res?.explorerUrl) {
+        toast(() => (
+          <div>
+            <a href={res.explorerUrl} target="_blank" rel="noreferrer" className="text-blue-500 underline">View list tx</a>
+          </div>
+        ), { duration: 10000 });
+      }
     } catch (err: unknown) {
       console.error('List on-chain failed', err);
       setListStatus('failed');
-      alert('List failed: ' + getErrorMessage(err));
+      toast.error('List failed: ' + getErrorMessage(err));
     }
   };
 

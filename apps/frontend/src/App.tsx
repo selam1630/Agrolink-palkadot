@@ -1,4 +1,5 @@
 import React from "react";
+import { Toaster } from 'react-hot-toast';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ForgotPassword from "./components/authPages/ForgotPassword";
 import ResetPassword from "./components/authPages/ResetPassword";
@@ -35,6 +36,7 @@ function App() {
   return (
     <CartProvider>
       <BrowserRouter>
+        <Toaster position="top-right" />
         <Routes>
           {/* Main Pages with only the Header */}
           <Route element={<MainLayout />}>

@@ -38,6 +38,10 @@ async function main() {
   if (useWebSocket) {
     contract.on('ProductListed', async (productId: any, seller: string, price: any, metadataURI: string, event: any) => {
       try {
+        console.log('Received ProductListed event - raw:', { productId, seller, price, metadataURI, event });
+        try {
+          console.log('Event.args:', (event && (event.args ?? (event as any))))
+        } catch {}
         const pid = Number(productId?.toString());
         const priceEth = ethers.formatEther(price);
         const txHash = event?.transactionHash ?? event?.transaction?.hash;
@@ -132,27 +136,31 @@ async function main() {
           });
           console.log('Marked product as sold for onchain id', pid, 'updatedCount=', updated.count);
           // create an onchain transaction record (dedupe by txHash)
-          try {
-            const existingTx = await prisma.onchainTransaction.findUnique({ where: { txHash } as any });
-            if (!existingTx) {
-              await prisma.onchainTransaction.create({
-                data: {
-                  txHash: txHash ?? '',
-                  onchainProductId: pid,
-                  buyer: buyer,
-                  seller: existing.seller ?? undefined,
-                  amount: amount ?? '',
-                  blockNumber: blockNumber ?? undefined,
-                  logIndex: logIndex ?? undefined,
-                }
-              });
-              console.log('Created onchain transaction record for tx', txHash);
-            } else {
-              console.log('Onchain transaction already exists for tx', txHash);
+            try {
+              // Don't call findUnique with an undefined txHash; guard against missing txHash
+              let existingTx = null;
+              if (txHash) {
+                existingTx = await prisma.onchainTransaction.findUnique({ where: { txHash } as any });
+              }
+              if (!existingTx) {
+                await prisma.onchainTransaction.create({
+                  data: {
+                    txHash: txHash ?? '',
+                    onchainProductId: pid,
+                    buyer: buyer,
+                    seller: existing.seller ?? undefined,
+                    amount: amount ?? '',
+                    blockNumber: blockNumber ?? undefined,
+                    logIndex: logIndex ?? undefined,
+                  }
+                });
+                console.log('Created onchain transaction record for tx', txHash);
+              } else {
+                console.log('Onchain transaction already exists for tx', txHash);
+              }
+            } catch (txErr) {
+              console.error('Failed creating onchain transaction record', (txErr as any)?.stack ?? txErr);
             }
-          } catch (txErr) {
-            console.error('Failed creating onchain transaction record', txErr);
-          }
         } else {
           console.log('No matching local product found to mark as sold for onchain id', pid);
         }

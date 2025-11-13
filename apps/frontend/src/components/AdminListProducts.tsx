@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { apiPath } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -62,7 +63,15 @@ const AdminListProducts: React.FC = () => {
 
       const res = await listOnchainProduct(metadataUri, price);
       setStatusMap((s) => ({ ...s, [p.id]: 'confirmed' }));
-      if (res?.explorerUrl) setLinkMap((m) => ({ ...m, [p.id]: res.explorerUrl }));
+      if (res?.explorerUrl) {
+        setLinkMap((m) => ({ ...m, [p.id]: res.explorerUrl }));
+        toast.success('Listed on-chain: tx pending/confirmed', { duration: 6000 });
+        toast(() => (
+          <div>
+            <a href={res.explorerUrl} target="_blank" rel="noreferrer" className="text-blue-500 underline">View tx</a>
+          </div>
+        ), { duration: 10000 });
+      }
       // watcher will update the product record; optionally refresh list
       setTimeout(() => {
         // refresh products after a short delay to allow watcher to ingest
@@ -82,6 +91,7 @@ const AdminListProducts: React.FC = () => {
     } catch (err: unknown) {
       setStatusMap((s) => ({ ...s, [p.id]: 'failed' }));
       console.error('List failed', err);
+      toast.error('Listing failed: ' + (err instanceof Error ? err.message : String(err)));
     }
   };
 
@@ -91,7 +101,27 @@ const AdminListProducts: React.FC = () => {
       const { listOnchainProduct } = await import('../lib/web3');
       const res = await listOnchainProduct(quickMetadata || '', quickPrice || '0');
       setQuickStatus('confirmed');
-      if (res?.explorerUrl) setQuickLink(res.explorerUrl);
+      if (res?.explorerUrl) {
+        setQuickLink(res.explorerUrl);
+        toast.success('Quick-list submitted', { duration: 6000 });
+        toast(() => (
+          <div>
+            <a href={res.explorerUrl} target="_blank" rel="noreferrer" className="text-blue-500 underline">View tx</a>
+          </div>
+        ), { duration: 10000 });
+        // optimistic UI: insert a temporary product row until watcher ingests the event
+        const tempId = `optimistic-${Date.now()}`;
+        const optimisticProduct: Product = {
+          id: tempId,
+          name: quickName || `onchain#pending`,
+          price: Number(quickPrice) || 0,
+          imageUrl: '',
+          onchainId: undefined,
+          metadataUri: quickMetadata || undefined,
+          onchainPrice: quickPrice || undefined,
+        };
+        setProducts((prev) => [optimisticProduct, ...prev]);
+      }
       // refresh products after a short delay to let watcher ingest the event
       setTimeout(async () => {
         if (!token) return;
@@ -101,13 +131,14 @@ const AdminListProducts: React.FC = () => {
             const data = await r.json();
             setProducts(data.products || data || []);
           }
-        } catch (e) {
+        } catch {
           // ignore
         }
       }, 4000);
     } catch (err) {
       setQuickStatus('failed');
       console.error('Quick list failed', err);
+      toast.error('Quick list failed: ' + (err instanceof Error ? err.message : String(err)));
     }
   };
 
