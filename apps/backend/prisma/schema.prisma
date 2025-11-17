@@ -21,6 +21,11 @@ model User {
   otpExpiresAt            DateTime?
   status                  String    @default("unregistered")
   lastRegistrationAttempt DateTime?
+  walletAddress           String?   // Blockchain wallet address
+  reputationScore         Float     @default(0.0) // Farmer reputation (0-100)
+  totalSales              Int       @default(0) // Total products sold
+  successfulTransactions  Int       @default(0) // Successful transactions
+  disputeCount            Int       @default(0) // Number of disputes
 
   products         Product[]
   cartItems        CartItem[]
@@ -28,6 +33,7 @@ model User {
   transactions     Transaction[]
   advices          Advice[]
   farmerRegistries FarmerRegistry[]
+  nftCertificates  NFTCertificate[] @relation("CertificateOwner")
 
   createdAt            DateTime?             @default(now()) @map("createdAt")
   updatedAt            DateTime?             @updatedAt @map("updatedAt")
@@ -41,6 +47,7 @@ model Product {
   name        String
   onchainId   Int?
   seller      String?
+  buyer       String?     // Buyer wallet address
   onchainPrice String?
   metadataUri String?
   onchainTxHash String?
@@ -56,6 +63,13 @@ model Product {
   user        User?       @relation(fields: [userId], references: [id], onDelete: SetNull) // Make the relation optional
   cartItems   CartItem[]
   orderItems  OrderItem[]
+  nftCertificate NFTCertificate? // One NFT per product
+
+  // Escrow fields
+  deliveryConfirmed Boolean   @default(false)
+  disputeRaised     Boolean   @default(false)
+  escrowReleaseTime  DateTime? // When escrow can be released
+  escrowStatus       String?  @default("pending") // pending, confirmed, released, disputed, resolved
 
   farmerName  String?
   farmerPhone String?
@@ -63,6 +77,7 @@ model Product {
   updatedAt            DateTime?             @updatedAt @map("updatedAt")
   isDeleted            Boolean               @default(false)
   farmerProductRecords FarmerProductRecord[] @relation("ProductRecords")
+  supplyChainTrace     SupplyChainTrace?
 }
 
 model CartItem {
@@ -225,4 +240,105 @@ model OnchainTransaction {
   logIndex         Int?
 
   createdAt DateTime @default(now())
+}
+
+// NFT Certificate for product authenticity and provenance
+model NFTCertificate {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId       String   @unique @db.ObjectId
+  product         Product  @relation(fields: [productId], references: [id])
+  tokenId         String?  @unique // On-chain NFT token ID
+  certificateHash String   @unique // IPFS hash or metadata hash
+  metadataUri     String?  // IPFS URI for NFT metadata
+  imageUri        String?  // Certificate image URI
+  ownerAddress    String?  // Current owner wallet address
+  ownerId         String?  @db.ObjectId
+  owner           User?    @relation("CertificateOwner", fields: [ownerId], references: [id])
+  
+  // Certificate details
+  productName     String
+  farmerName      String?
+  farmerAddress   String?
+  region          String?
+  qualityGrade    String?  // A, B, C, etc.
+  organicCertified Boolean @default(false)
+  harvestDate     DateTime?
+  transactionHash String?  // Link to purchase transaction
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// Farmer Reputation History (for tracking reputation changes)
+model FarmerReputationHistory {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  farmerId        String   @db.ObjectId
+  farmerPhone     String   // Denormalized for easier queries
+  previousScore   Float
+  newScore        Float
+  changeReason    String   // "transaction_completed", "dispute_resolved", etc.
+  transactionId   String?   // Related transaction/product ID
+  notes           String?
+  
+  createdAt       DateTime @default(now())
+}
+
+// Supply Chain Traceability - Track products from farm to buyer
+model SupplyChainTrace {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId       String   @unique @db.ObjectId
+  product         Product  @relation(fields: [productId], references: [id])
+  onchainId       Int?     // Link to on-chain product ID
+  
+  // Origin information
+  farmLocation    String?   // Farm GPS coordinates or address
+  farmRegion      String?
+  harvestDate     DateTime?
+  
+  // Current status
+  currentStage    String   @default("harvested") // harvested, in_transit, at_warehouse, delivered
+  currentLocation String?  // Current GPS coordinates
+  estimatedDelivery DateTime?
+  
+  // Cross-chain verification (Polkadot feature)
+  verificationHash String?  @unique // Hash for cross-chain verification
+  verifiedOnChains String[] // Array of chain names where verified (e.g., ["polkadot", "kusama"])
+  
+  // Quality metrics during transport (filtered by readingType: "temperature" or "humidity")
+  readings        SupplyChainReading[]
+  
+  // Timeline of events
+  events          SupplyChainEvent[]
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// Supply chain location/condition readings (IoT sensor data simulation)
+model SupplyChainReading {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  traceId         String   @db.ObjectId
+  trace           SupplyChainTrace @relation(fields: [traceId], references: [id], onDelete: Cascade)
+  readingType     String   // "temperature" or "humidity"
+  value           Float    // Temperature in Celsius or Humidity %
+  location        String?  // GPS coordinates when reading taken
+  timestamp       DateTime @default(now())
+  recordedBy      String?  // Device ID or transporter ID
+  
+  createdAt       DateTime @default(now())
+}
+
+// Supply chain events (milestones in the journey)
+model SupplyChainEvent {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  traceId         String   @db.ObjectId
+  trace           SupplyChainTrace @relation(fields: [traceId], references: [id], onDelete: Cascade)
+  eventType       String   // "harvested", "packaged", "shipped", "in_transit", "at_warehouse", "delivered"
+  location        String?  // GPS coordinates
+  description     String?
+  verified        Boolean  @default(false) // Whether verified on-chain
+  verificationTxHash String? // Transaction hash if verified on-chain
+  metadata        Json?    // Additional event data
+  
+  createdAt       DateTime @default(now())
 }

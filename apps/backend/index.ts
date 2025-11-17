@@ -17,6 +17,10 @@ import newsRoutes from "./routes/newsRoute";
 import fertilizerRoutes from "./routes/fertilizerRoute";
 import farmerProductRecordRoutes from "./routes/farmerProductRecord.routes"
 import onchainRoutes from "./routes/onchain.route";
+import escrowRoutes from "./routes/escrow.route";
+import nftRoutes from "./routes/nft.route";
+import reputationRoutes from "./routes/reputation.route";
+import supplyChainRoutes from "./routes/supplyChain.route";
 
 const app = express();
 const allowedOrigins = [
@@ -55,6 +59,10 @@ app.use("/api/fertilizer", fertilizerRoutes);
 app.use("/audio", express.static(path.join(process.cwd(), "public", "audio")));
 app.use("/api/farmer-products", farmerProductRecordRoutes);
 app.use('/api/onchain/transactions', onchainRoutes);
+app.use('/api/escrow', escrowRoutes);
+app.use('/api/nft', nftRoutes);
+app.use('/api/reputation', reputationRoutes);
+app.use('/api/supply-chain', supplyChainRoutes);
 
 
 const PORT = 5000;

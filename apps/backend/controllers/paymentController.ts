@@ -140,6 +140,69 @@ export const verifyPayment = async (req: Request, res: Response) => {
       ]);
 
       console.log("✅ Payment verified and products marked as sold.");
+      
+      // Initialize supply chain traces for sold products
+      for (const productId of productIds) {
+        try {
+          const product = await prisma.product.findUnique({
+            where: { id: productId } as any,
+            include: { user: true }
+          });
+
+          if (product) {
+            // Check if trace already exists
+            const existingTrace = await prisma.supplyChainTrace.findUnique({
+              where: { productId } as any
+            });
+
+            if (!existingTrace) {
+              // Generate verification hash for cross-chain verification
+              const crypto = require('crypto');
+              const verificationData = {
+                productId: product.id,
+                onchainId: product.onchainId,
+                timestamp: new Date().toISOString(),
+                seller: product.seller || product.user?.walletAddress
+              };
+              const verificationHash = crypto
+                .createHash('sha256')
+                .update(JSON.stringify(verificationData))
+                .digest('hex');
+
+              // Create supply chain trace
+              await prisma.supplyChainTrace.create({
+                data: {
+                  productId: product.id,
+                  onchainId: product.onchainId || undefined,
+                  farmRegion: product.user?.name || 'Unknown',
+                  harvestDate: new Date(),
+                  currentStage: 'harvested',
+                  verificationHash,
+                  verifiedOnChains: ['polkadot'],
+                  events: {
+                    create: {
+                      eventType: 'harvested',
+                      location: product.user?.name || 'Farm',
+                      description: `Product harvested by ${product.farmerName || 'Farmer'}`,
+                      verified: true,
+                      metadata: {
+                        farmerName: product.farmerName,
+                        farmerPhone: product.farmerPhone,
+                        productName: product.name
+                      }
+                    }
+                  }
+                }
+              });
+              console.log(`✅ Supply chain trace initialized for product ${productId}`);
+            }
+          }
+        } catch (traceErr) {
+          console.error(`Error initializing supply chain trace for product ${productId}:`, traceErr);
+          // Don't fail the payment verification if trace initialization fails
+        }
+      }
+
       for (const item of transaction.order.orderItems) {
         const product = item.product;
         if (product.farmerPhone) {

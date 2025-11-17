@@ -1,0 +1,13 @@
+2025-11-15T05:55:26.263198Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-11-15T05:55:29.629711Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo"), AnchoredSystemPathBuf(".turbo\\cookies"), AnchoredSystemPathBuf(".turbo\\daemon"), AnchoredSystemPathBuf(".turbo\\cookies\\.turbo-cookie")}
+2025-11-15T05:55:30.434041Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-15T05:55:30.495975Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\daemon\\33f35a36fef1b28c-turbo.log.2025-11-15")}
+2025-11-15T05:55:30.496040Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-15T05:55:31.486232Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\cookies")}
+2025-11-15T05:55:31.486296Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-15T06:19:15.884365Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-11-15T06:19:15.884388Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-11-15T06:19:16.032997Z  WARN turborepo_filewatch: failed to remove cookie file failed to remove file `C:\Users\user\Downloads\AgroLink-auth\AgroLink-auth\.turbo\cookies\.turbo-cookie`
+2025-11-15T06:19:16.028561Z  WARN turborepo_filewatch: failed to remove cookie file failed to remove file `C:\Users\user\Downloads\AgroLink-auth\AgroLink-auth\.turbo\cookies\.turbo-cookie`
+2025-11-15T06:19:18.476192Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\cookies"), AnchoredSystemPathBuf(".turbo\\daemon\\33f35a36fef1b28c-turbo.log.2025-11-15")}
+2025-11-15T06:19:18.515062Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { PackageIcon, CalendarIcon, LeafIcon } from "lucide-react";
+import { PackageIcon, CalendarIcon, LeafIcon, Shield } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import Header from "./Header";
 
@@ -48,7 +48,18 @@ const BuyerSidebarLayout: React.FC = () => {
           <PackageIcon className="w-5 h-5" />
           <span className="font-medium">{t("nav.products") || "Products"}</span>
         </Link>
-
+ {/* Escrows Link */}
+ <Link
+          to="/escrows1"
+          className={`flex items-center gap-3 px-3 py-3 rounded-lg ${transitionClass} ${
+            isActive("/escrows")
+              ? `${activeBgClass} shadow-md`
+              : `${hoverBgClass}`
+          }`}
+        >
+          <Shield className="w-5 h-5" />
+          <span className="font-medium">My Escrows</span>
+        </Link>
         {/* Calendar Link */}
         <Link
           to="/calendar2"
@@ -61,6 +72,8 @@ const BuyerSidebarLayout: React.FC = () => {
           <CalendarIcon className="w-5 h-5" />
           <span className="font-medium">{t("nav.calendar") || "Calendar"}</span>
         </Link>
+
+       
       </nav>
 
       {/* Footer */}

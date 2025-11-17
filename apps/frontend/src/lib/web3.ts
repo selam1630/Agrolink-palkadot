@@ -114,3 +114,127 @@ export async function listOnchainProduct(metadataUri: string, price: string | nu
   const explorerUrl = explorerBase ? `${explorerBase.replace(/\/$/, '')}/${tx.hash}` : undefined;
   return { hash: tx.hash, receipt, explorerUrl };
 }
+
+// Confirm delivery (buyer only) - releases escrow immediately
+export async function confirmDelivery(onchainId: number) {
+  if (typeof window === 'undefined') throw new Error('Not running in browser');
+  const anyWindow: any = window as any;
+  const ethereum = anyWindow.ethereum;
+  if (!ethereum) throw new Error('No injected wallet found. Install MetaMask.');
+
+  const provider = new ethers.BrowserProvider(ethereum as any);
+  const signer = await provider.getSigner();
+
+  const contractAddress = (import.meta.env.VITE_MARKETPLACE_CONTRACT_ADDRESS as string) || (process.env.REACT_APP_MARKETPLACE_CONTRACT_ADDRESS as string) || '';
+  if (!contractAddress) throw new Error('MARKETPLACE_CONTRACT_ADDRESS not configured');
+
+  const explorerBase = (import.meta.env.VITE_TX_EXPLORER_URL as string) || '';
+  const contract = new ethers.Contract(contractAddress, MarketplaceAbi as any, signer);
+
+  let gasLimit: bigint | undefined;
+  try {
+    const estimate: bigint = await contract.estimateGas.confirmDelivery(onchainId);
+    gasLimit = (estimate * 110n) / 100n;
+  } catch {
+    gasLimit = undefined;
+  }
+
+  const tx = await contract.confirmDelivery(onchainId, gasLimit ? { gasLimit } : {});
+  const receipt = await tx.wait();
+
+  const explorerUrl = explorerBase ? `${explorerBase.replace(/\/$/, '')}/${tx.hash}` : undefined;
+  return { hash: tx.hash, receipt, explorerUrl };
+}
+
+// Release escrow after time period
+export async function releaseEscrow(onchainId: number) {
+  if (typeof window === 'undefined') throw new Error('Not running in browser');
+  const anyWindow: any = window as any;
+  const ethereum = anyWindow.ethereum;
+  if (!ethereum) throw new Error('No injected wallet found. Install MetaMask.');
+
+  const provider = new ethers.BrowserProvider(ethereum as any);
+  const signer = await provider.getSigner();
+
+  const contractAddress = (import.meta.env.VITE_MARKETPLACE_CONTRACT_ADDRESS as string) || (process.env.REACT_APP_MARKETPLACE_CONTRACT_ADDRESS as string) || '';
+  if (!contractAddress) throw new Error('MARKETPLACE_CONTRACT_ADDRESS not configured');
+
+  const explorerBase = (import.meta.env.VITE_TX_EXPLORER_URL as string) || '';
+  const contract = new ethers.Contract(contractAddress, MarketplaceAbi as any, signer);
+
+  let gasLimit: bigint | undefined;
+  try {
+    const estimate: bigint = await contract.estimateGas.releaseEscrow(onchainId);
+    gasLimit = (estimate * 110n) / 100n;
+  } catch {
+    gasLimit = undefined;
+  }
+
+  const tx = await contract.releaseEscrow(onchainId, gasLimit ? { gasLimit } : {});
+  const receipt = await tx.wait();
+
+  const explorerUrl = explorerBase ? `${explorerBase.replace(/\/$/, '')}/${tx.hash}` : undefined;
+  return { hash: tx.hash, receipt, explorerUrl };
+}
+
+// Raise a dispute
+export async function raiseDispute(onchainId: number) {
+  if (typeof window === 'undefined') throw new Error('Not running in browser');
+  const anyWindow: any = window as any;
+  const ethereum = anyWindow.ethereum;
+  if (!ethereum) throw new Error('No injected wallet found. Install MetaMask.');
+
+  const provider = new ethers.BrowserProvider(ethereum as any);
+  const signer = await provider.getSigner();
+
+  const contractAddress = (import.meta.env.VITE_MARKETPLACE_CONTRACT_ADDRESS as string) || (process.env.REACT_APP_MARKETPLACE_CONTRACT_ADDRESS as string) || '';
+  if (!contractAddress) throw new Error('MARKETPLACE_CONTRACT_ADDRESS not configured');
+
+  const explorerBase = (import.meta.env.VITE_TX_EXPLORER_URL as string) || '';
+  const contract = new ethers.Contract(contractAddress, MarketplaceAbi as any, signer);
+
+  let gasLimit: bigint | undefined;
+  try {
+    const estimate: bigint = await contract.estimateGas.raiseDispute(onchainId);
+    gasLimit = (estimate * 110n) / 100n;
+  } catch {
+    gasLimit = undefined;
+  }
+
+  const tx = await contract.raiseDispute(onchainId, gasLimit ? { gasLimit } : {});
+  const receipt = await tx.wait();
+
+  const explorerUrl = explorerBase ? `${explorerBase.replace(/\/$/, '')}/${tx.hash}` : undefined;
+  return { hash: tx.hash, receipt, explorerUrl };
+}
+
+// Resolve dispute (admin only)
+export async function resolveDispute(onchainId: number, favorBuyer: boolean) {
+  if (typeof window === 'undefined') throw new Error('Not running in browser');
+  const anyWindow: any = window as any;
+  const ethereum = anyWindow.ethereum;
+  if (!ethereum) throw new Error('No injected wallet found. Install MetaMask.');
+
+  const provider = new ethers.BrowserProvider(ethereum as any);
+  const signer = await provider.getSigner();
+
+  const contractAddress = (import.meta.env.VITE_MARKETPLACE_CONTRACT_ADDRESS as string) || (process.env.REACT_APP_MARKETPLACE_CONTRACT_ADDRESS as string) || '';
+  if (!contractAddress) throw new Error('MARKETPLACE_CONTRACT_ADDRESS not configured');
+
+  const explorerBase = (import.meta.env.VITE_TX_EXPLORER_URL as string) || '';
+  const contract = new ethers.Contract(contractAddress, MarketplaceAbi as any, signer);
+
+  let gasLimit: bigint | undefined;
+  try {
+    const estimate: bigint = await contract.estimateGas.resolveDispute(onchainId, favorBuyer);
+    gasLimit = (estimate * 110n) / 100n;
+  } catch {
+    gasLimit = undefined;
+  }
+
+  const tx = await contract.resolveDispute(onchainId, favorBuyer, gasLimit ? { gasLimit } : {});
+  const receipt = await tx.wait();
+
+  const explorerUrl = explorerBase ? `${explorerBase.replace(/\/$/, '')}/${tx.hash}` : undefined;
+  return { hash: tx.hash, receipt, explorerUrl };
+}

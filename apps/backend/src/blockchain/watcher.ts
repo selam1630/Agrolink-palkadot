@@ -3,6 +3,8 @@ dotenv.config();
 
 import { ethers } from 'ethers';
 import prisma from '../../prisma/prisma';
+import * as nftService from '../services/nftCertificate.service';
+import * as reputationService from '../services/reputation.service';
 
 const RPC_URL = process.env.BLOCKCHAIN_PROVIDER_URL || '';
 const CONTRACT_ADDRESS = process.env.MARKETPLACE_CONTRACT_ADDRESS || '';
@@ -112,7 +114,7 @@ async function main() {
       }
     });
 
-    contract.on('ProductBought', async (productId: any, buyer: string, price: any, event: any) => {
+    contract.on('ProductBought', async (productId: any, buyer: string, seller: string, price: any, event: any) => {
       try {
         const pid = Number(productId?.toString());
         const txHash = event?.transactionHash ?? event?.transaction?.hash;
@@ -120,7 +122,11 @@ async function main() {
         const blockNumber = typeof event?.blockNumber !== 'undefined' ? Number(event.blockNumber) : undefined;
         const amount = typeof price !== 'undefined' ? ethers.formatEther(price) : undefined;
 
-        console.log(`ProductBought - id:${pid} buyer:${buyer} tx:${txHash}`);
+        console.log(`ProductBought - id:${pid} buyer:${buyer} seller:${seller} tx:${txHash}`);
+
+        // Calculate escrow release time (7 days from now)
+        const escrowReleaseTime = new Date();
+        escrowReleaseTime.setDate(escrowReleaseTime.getDate() + 7);
 
         const existing = await prisma.product.findFirst({ where: { onchainId: pid } as any });
         if (existing) {
@@ -129,34 +135,137 @@ async function main() {
             data: {
               isSold: true,
               status: 'sold',
+              buyer: buyer,
+              escrowStatus: 'pending',
+              escrowReleaseTime: escrowReleaseTime,
+              deliveryConfirmed: false,
+              disputeRaised: false,
               onchainTxHash: txHash,
               onchainLogIndex: logIndex,
               onchainBlockNumber: blockNumber
             }
           });
-          console.log('Marked product as sold for onchain id', pid, 'updatedCount=', updated.count);
+          console.log('Marked product as sold with escrow for onchain id', pid, 'updatedCount=', updated.count);
+          
+          // Initialize supply chain trace if not exists
+          try {
+            const existingTrace = await prisma.supplyChainTrace.findUnique({ where: { productId: existing.id } as any });
+            if (!existingTrace) {
+              const crypto = require('crypto');
+              const verificationData = {
+                productId: existing.id,
+                onchainId: pid,
+                timestamp: new Date().toISOString(),
+                seller: seller || existing.seller
+              };
+              const verificationHash = crypto
+                .createHash('sha256')
+                .update(JSON.stringify(verificationData))
+                .digest('hex');
+
+              await prisma.supplyChainTrace.create({
+                data: {
+                  productId: existing.id,
+                  onchainId: pid,
+                  farmRegion: existing.farmerName || 'Unknown',
+                  harvestDate: new Date(),
+                  currentStage: 'harvested',
+                  verificationHash,
+                  verifiedOnChains: ['polkadot'],
+                  events: {
+                    create: {
+                      eventType: 'harvested',
+                      location: existing.farmerName || 'Farm',
+                      description: `Product harvested by ${existing.farmerName || 'Farmer'}`,
+                      verified: true,
+                      metadata: {
+                        farmerName: existing.farmerName,
+                        farmerPhone: existing.farmerPhone,
+                        productName: existing.name,
+                        onchainTxHash: txHash
+                      }
+                    }
+                  }
+                }
+              });
+              console.log('Created supply chain trace for onchain product', pid);
+            }
+          } catch (traceErr) {
+            console.error('Failed creating supply chain trace', (traceErr as any)?.stack ?? traceErr);
+          }
+          
           // create an onchain transaction record (dedupe by txHash)
             try {
-              // Don't call findUnique with an undefined txHash; guard against missing txHash
-              let existingTx = null;
-              if (txHash) {
-                existingTx = await prisma.onchainTransaction.findUnique({ where: { txHash } as any });
-              }
-              if (!existingTx) {
-                await prisma.onchainTransaction.create({
-                  data: {
-                    txHash: txHash ?? '',
-                    onchainProductId: pid,
-                    buyer: buyer,
-                    seller: existing.seller ?? undefined,
-                    amount: amount ?? '',
-                    blockNumber: blockNumber ?? undefined,
-                    logIndex: logIndex ?? undefined,
+              // Only create transaction if we have a valid txHash
+              const txHashStr = txHash ? String(txHash).trim() : '';
+              if (txHashStr !== '') {
+                let existingTx = null;
+                existingTx = await prisma.onchainTransaction.findUnique({ where: { txHash: txHashStr } as any });
+                if (!existingTx) {
+                  // Ensure amount is properly formatted
+                  const formattedAmount = amount && amount !== '' ? amount : (price ? ethers.formatEther(price) : '0');
+                  await prisma.onchainTransaction.create({
+                    data: {
+                      txHash: txHashStr,
+                      onchainProductId: pid,
+                      buyer: buyer || '',
+                      seller: seller ?? existing.seller ?? undefined,
+                      amount: formattedAmount,
+                      blockNumber: blockNumber ?? undefined,
+                      logIndex: logIndex ?? undefined,
+                    }
+                  });
+                  console.log('Created onchain transaction record for tx', txHashStr);
+                  
+                  // Generate NFT certificate for the product
+                  try {
+                    const existingCert = await nftService.getNFTCertificate(existing.id);
+                    if (!existingCert) {
+                      await nftService.createNFTCertificate({
+                        productId: existing.id,
+                        productName: existing.name,
+                        farmerName: existing.farmerName ?? undefined,
+                        farmerAddress: seller ?? existing.seller ?? undefined,
+                        region: undefined,
+                        qualityGrade: 'A',
+                        organicCertified: false,
+                        harvestDate: existing.createdAt ? new Date(existing.createdAt) : undefined,
+                        transactionHash: txHashStr,
+                        imageUrl: existing.imageUrl ?? undefined,
+                        ownerAddress: buyer,
+                        ownerId: undefined, // Buyer might not be a user in our system
+                      });
+                      console.log('✅ Generated NFT certificate for product', existing.id);
+                    }
+                  } catch (nftErr) {
+                    console.error('Failed generating NFT certificate', (nftErr as any)?.stack ?? nftErr);
                   }
-                });
-                console.log('Created onchain transaction record for tx', txHash);
+                  
+                  // Update farmer reputation
+                  try {
+                    if (existing.userId) {
+                      await prisma.user.update({
+                        where: { id: existing.userId } as any,
+                        data: {
+                          totalSales: { increment: 1 },
+                        },
+                      });
+                      await reputationService.updateFarmerReputation(
+                        existing.userId,
+                        'transaction_completed',
+                        existing.id,
+                        `Product sold: ${existing.name}`
+                      );
+                      console.log('✅ Updated farmer reputation for', existing.userId);
+                    }
+                  } catch (repErr) {
+                    console.error('Failed updating farmer reputation', (repErr as any)?.stack ?? repErr);
+                  }
+                } else {
+                  console.log('Onchain transaction already exists for tx', txHashStr);
+                }
               } else {
-                console.log('Onchain transaction already exists for tx', txHash);
+                console.warn('Cannot create onchain transaction: txHash is missing or empty for product', pid);
               }
             } catch (txErr) {
               console.error('Failed creating onchain transaction record', (txErr as any)?.stack ?? txErr);
@@ -166,6 +275,97 @@ async function main() {
         }
       } catch (err) {
         console.error('Error handling ProductBought', err);
+      }
+    });
+
+    // Handle DeliveryConfirmed event
+    contract.on('DeliveryConfirmed', async (productId: any, buyer: string, event: any) => {
+      try {
+        const pid = Number(productId?.toString());
+        const txHash = event?.transactionHash ?? event?.transaction?.hash;
+        console.log(`DeliveryConfirmed - id:${pid} buyer:${buyer} tx:${txHash}`);
+
+        const existing = await prisma.product.findFirst({ where: { onchainId: pid } as any });
+        if (existing) {
+          await prisma.product.updateMany({
+            where: { onchainId: pid } as any,
+            data: {
+              deliveryConfirmed: true,
+              escrowStatus: 'confirmed'
+            }
+          });
+          console.log('Updated product delivery confirmation for onchain id', pid);
+        }
+      } catch (err) {
+        console.error('Error handling DeliveryConfirmed', err);
+      }
+    });
+
+    // Handle EscrowReleased event
+    contract.on('EscrowReleased', async (productId: any, seller: string, amount: any, event: any) => {
+      try {
+        const pid = Number(productId?.toString());
+        const txHash = event?.transactionHash ?? event?.transaction?.hash;
+        console.log(`EscrowReleased - id:${pid} seller:${seller} amount:${ethers.formatEther(amount)} tx:${txHash}`);
+
+        const existing = await prisma.product.findFirst({ where: { onchainId: pid } as any });
+        if (existing) {
+          await prisma.product.updateMany({
+            where: { onchainId: pid } as any,
+            data: {
+              escrowStatus: 'released'
+            }
+          });
+          console.log('Updated product escrow status to released for onchain id', pid);
+        }
+      } catch (err) {
+        console.error('Error handling EscrowReleased', err);
+      }
+    });
+
+    // Handle DisputeRaised event
+    contract.on('DisputeRaised', async (productId: any, raisedBy: string, event: any) => {
+      try {
+        const pid = Number(productId?.toString());
+        const txHash = event?.transactionHash ?? event?.transaction?.hash;
+        console.log(`DisputeRaised - id:${pid} raisedBy:${raisedBy} tx:${txHash}`);
+
+        const existing = await prisma.product.findFirst({ where: { onchainId: pid } as any });
+        if (existing) {
+          await prisma.product.updateMany({
+            where: { onchainId: pid } as any,
+            data: {
+              disputeRaised: true,
+              escrowStatus: 'disputed'
+            }
+          });
+          console.log('Updated product dispute status for onchain id', pid);
+        }
+      } catch (err) {
+        console.error('Error handling DisputeRaised', err);
+      }
+    });
+
+    // Handle DisputeResolved event
+    contract.on('DisputeResolved', async (productId: any, favorBuyer: boolean, resolver: string, event: any) => {
+      try {
+        const pid = Number(productId?.toString());
+        const txHash = event?.transactionHash ?? event?.transaction?.hash;
+        console.log(`DisputeResolved - id:${pid} favorBuyer:${favorBuyer} resolver:${resolver} tx:${txHash}`);
+
+        const existing = await prisma.product.findFirst({ where: { onchainId: pid } as any });
+        if (existing) {
+          await prisma.product.updateMany({
+            where: { onchainId: pid } as any,
+            data: {
+              disputeRaised: false,
+              escrowStatus: 'resolved'
+            }
+          });
+          console.log('Updated product dispute resolution for onchain id', pid);
+        }
+      } catch (err) {
+        console.error('Error handling DisputeResolved', err);
       }
     });
   } else {
@@ -190,7 +390,6 @@ async function main() {
     const pollIntervalMs = Number(process.env.BLOCKCHAIN_POLL_INTERVAL_MS || 10_000);
 
     const listedFilter = contract.filters.ProductListed();
-    const boughtFilter = contract.filters.ProductBought();
 
     const poller = setInterval(async () => {
       try {
@@ -277,6 +476,7 @@ async function main() {
         }
 
         // fetch bought
+        const boughtFilter = contract.filters.ProductBought();
         const boughtEvents = await contract.queryFilter(boughtFilter, from, to);
         for (const ev of boughtEvents) {
           try {
@@ -284,10 +484,14 @@ async function main() {
             const args: any = evAny.args ?? evAny;
             const pid = Number(args?.productId?.toString() ?? String(args?.[0] ?? '0'));
             const buyer = args?.buyer ?? args?.[1];
+            const seller = args?.seller ?? args?.[2];
             const txHash = evAny.transactionHash ?? evAny.transaction?.hash;
             const logIndex = typeof evAny.logIndex !== 'undefined' ? Number(evAny.logIndex) : undefined;
             const blockNumber = typeof evAny.blockNumber !== 'undefined' ? Number(evAny.blockNumber) : undefined;
-            console.log(`ProductBought (poll) - id:${pid} buyer:${buyer} tx:${txHash}`);
+            console.log(`ProductBought (poll) - id:${pid} buyer:${buyer} seller:${seller} tx:${txHash}`);
+
+            const escrowReleaseTime = new Date();
+            escrowReleaseTime.setDate(escrowReleaseTime.getDate() + 7);
 
             const existing = await prisma.product.findFirst({ where: { onchainId: pid } as any });
             if (existing) {
@@ -296,40 +500,240 @@ async function main() {
                 data: {
                   isSold: true,
                   status: 'sold',
+                  buyer: buyer,
+                  escrowStatus: 'pending',
+                  escrowReleaseTime: escrowReleaseTime,
+                  deliveryConfirmed: false,
+                  disputeRaised: false,
                   onchainTxHash: txHash,
                   onchainLogIndex: logIndex,
                   onchainBlockNumber: blockNumber
                 }
               });
-              console.log('Marked product as sold for onchain id', pid, 'updatedCount=', updated.count);
-              // record transaction in DB
+              console.log('Marked product as sold with escrow for onchain id', pid, 'updatedCount=', updated.count);
+              
+              // Initialize supply chain trace if not exists (polling mode)
               try {
-                const amount = (typeof evAny.args?.price !== 'undefined') ? ethers.formatEther(evAny.args.price) : '';
-                const existingTx = await prisma.onchainTransaction.findUnique({ where: { txHash } as any });
-                if (!existingTx) {
-                  await prisma.onchainTransaction.create({
+                const existingTrace = await prisma.supplyChainTrace.findUnique({ where: { productId: existing.id } as any });
+                if (!existingTrace) {
+                  const crypto = require('crypto');
+                  const verificationData = {
+                    productId: existing.id,
+                    onchainId: pid,
+                    timestamp: new Date().toISOString(),
+                    seller: seller || existing.seller
+                  };
+                  const verificationHash = crypto
+                    .createHash('sha256')
+                    .update(JSON.stringify(verificationData))
+                    .digest('hex');
+
+                  await prisma.supplyChainTrace.create({
                     data: {
-                      txHash: txHash ?? '',
-                      onchainProductId: pid,
-                      buyer: buyer,
-                      seller: existing.seller ?? undefined,
-                      amount: amount ?? '',
-                      blockNumber: blockNumber ?? undefined,
-                      logIndex: logIndex ?? undefined,
+                      productId: existing.id,
+                      onchainId: pid,
+                      farmRegion: existing.farmerName || 'Unknown',
+                      harvestDate: new Date(),
+                      currentStage: 'harvested',
+                      verificationHash,
+                      verifiedOnChains: ['polkadot'],
+                      events: {
+                        create: {
+                          eventType: 'harvested',
+                          location: existing.farmerName || 'Farm',
+                          description: `Product harvested by ${existing.farmerName || 'Farmer'}`,
+                          verified: true,
+                          metadata: {
+                            farmerName: existing.farmerName,
+                            farmerPhone: existing.farmerPhone,
+                            productName: existing.name,
+                            onchainTxHash: txHash
+                          }
+                        }
+                      }
                     }
                   });
-                  console.log('Created onchain transaction record for tx (poll)', txHash);
+                  console.log('Created supply chain trace (poll) for onchain product', pid);
+                }
+              } catch (traceErr) {
+                console.error('Failed creating supply chain trace (poll)', (traceErr as any)?.stack ?? traceErr);
+              }
+              
+              // record transaction in DB
+              try {
+                // Only create transaction if we have a valid txHash
+                const txHashStr = txHash ? String(txHash).trim() : '';
+                if (txHashStr !== '') {
+                  const priceValue = evAny.args?.price ?? args?.price ?? args?.[3];
+                  const amount = (typeof priceValue !== 'undefined') ? ethers.formatEther(priceValue) : '0';
+                  const existingTx = await prisma.onchainTransaction.findUnique({ where: { txHash: txHashStr } as any });
+                  if (!existingTx) {
+                    await prisma.onchainTransaction.create({
+                      data: {
+                        txHash: txHashStr,
+                        onchainProductId: pid,
+                        buyer: buyer || '',
+                        seller: seller ?? existing.seller ?? undefined,
+                        amount: amount,
+                        blockNumber: blockNumber ?? undefined,
+                        logIndex: logIndex ?? undefined,
+                      }
+                    });
+                    console.log('Created onchain transaction record for tx (poll)', txHashStr);
+                    
+                    // Generate NFT certificate for the product
+                    try {
+                      const existingCert = await nftService.getNFTCertificate(existing.id);
+                      if (!existingCert) {
+                        await nftService.createNFTCertificate({
+                          productId: existing.id,
+                          productName: existing.name,
+                          farmerName: existing.farmerName ?? undefined,
+                          farmerAddress: seller ?? existing.seller ?? undefined,
+                          region: undefined,
+                          qualityGrade: 'A',
+                          organicCertified: false,
+                          harvestDate: existing.createdAt ? new Date(existing.createdAt) : undefined,
+                          transactionHash: txHashStr,
+                          imageUrl: existing.imageUrl ?? undefined,
+                          ownerAddress: buyer,
+                          ownerId: undefined,
+                        });
+                        console.log('✅ Generated NFT certificate for product (poll)', existing.id);
+                      }
+                    } catch (nftErr) {
+                      console.error('Failed generating NFT certificate (poll)', (nftErr as any)?.stack ?? nftErr);
+                    }
+                    
+                    // Update farmer reputation
+                    try {
+                      if (existing.userId) {
+                        await prisma.user.update({
+                          where: { id: existing.userId } as any,
+                          data: {
+                            totalSales: { increment: 1 },
+                          },
+                        });
+                        await reputationService.updateFarmerReputation(
+                          existing.userId,
+                          'transaction_completed',
+                          existing.id,
+                          `Product sold: ${existing.name}`
+                        );
+                        console.log('✅ Updated farmer reputation (poll) for', existing.userId);
+                      }
+                    } catch (repErr) {
+                      console.error('Failed updating farmer reputation (poll)', (repErr as any)?.stack ?? repErr);
+                    }
+                  } else {
+                    console.log('Onchain transaction already exists for tx (poll)', txHashStr);
+                  }
                 } else {
-                  console.log('Onchain transaction already exists for tx (poll)', txHash);
+                  console.warn('Cannot create onchain transaction (poll): txHash is missing or empty for product', pid);
                 }
               } catch (txErr) {
-                console.error('Failed creating onchain transaction record (poll)', txErr);
+                console.error('Failed creating onchain transaction record (poll)', (txErr as any)?.stack ?? txErr);
               }
             } else {
               console.log('No matching local product found to mark as sold for onchain id', pid);
             }
           } catch (e) {
             console.error('Error processing ProductBought (poll)', e);
+          }
+        }
+
+        // Handle DeliveryConfirmed events (polling)
+        const deliveryConfirmedFilter = contract.filters.DeliveryConfirmed();
+        const deliveryEvents = await contract.queryFilter(deliveryConfirmedFilter, from, to);
+        for (const ev of deliveryEvents) {
+          try {
+            const evAny: any = ev as any;
+            const args: any = evAny.args ?? evAny;
+            const pid = Number(args?.productId?.toString() ?? String(args?.[0] ?? '0'));
+            const existing = await prisma.product.findFirst({ where: { onchainId: pid } as any });
+            if (existing) {
+              await prisma.product.updateMany({
+                where: { onchainId: pid } as any,
+                data: {
+                  deliveryConfirmed: true,
+                  escrowStatus: 'confirmed'
+                }
+              });
+              console.log('Updated product delivery confirmation (poll) for onchain id', pid);
+            }
+          } catch (e) {
+            console.error('Error processing DeliveryConfirmed (poll)', e);
+          }
+        }
+
+        // Handle EscrowReleased events (polling)
+        const escrowReleasedFilter = contract.filters.EscrowReleased();
+        const escrowReleasedEvents = await contract.queryFilter(escrowReleasedFilter, from, to);
+        for (const ev of escrowReleasedEvents) {
+          try {
+            const evAny: any = ev as any;
+            const args: any = evAny.args ?? evAny;
+            const pid = Number(args?.productId?.toString() ?? String(args?.[0] ?? '0'));
+            const existing = await prisma.product.findFirst({ where: { onchainId: pid } as any });
+            if (existing) {
+              await prisma.product.updateMany({
+                where: { onchainId: pid } as any,
+                data: {
+                  escrowStatus: 'released'
+                }
+              });
+              console.log('Updated product escrow status to released (poll) for onchain id', pid);
+            }
+          } catch (e) {
+            console.error('Error processing EscrowReleased (poll)', e);
+          }
+        }
+
+        // Handle DisputeRaised events (polling)
+        const disputeRaisedFilter = contract.filters.DisputeRaised();
+        const disputeRaisedEvents = await contract.queryFilter(disputeRaisedFilter, from, to);
+        for (const ev of disputeRaisedEvents) {
+          try {
+            const evAny: any = ev as any;
+            const args: any = evAny.args ?? evAny;
+            const pid = Number(args?.productId?.toString() ?? String(args?.[0] ?? '0'));
+            const existing = await prisma.product.findFirst({ where: { onchainId: pid } as any });
+            if (existing) {
+              await prisma.product.updateMany({
+                where: { onchainId: pid } as any,
+                data: {
+                  disputeRaised: true,
+                  escrowStatus: 'disputed'
+                }
+              });
+              console.log('Updated product dispute status (poll) for onchain id', pid);
+            }
+          } catch (e) {
+            console.error('Error processing DisputeRaised (poll)', e);
+          }
+        }
+
+        // Handle DisputeResolved events (polling)
+        const disputeResolvedFilter = contract.filters.DisputeResolved();
+        const disputeResolvedEvents = await contract.queryFilter(disputeResolvedFilter, from, to);
+        for (const ev of disputeResolvedEvents) {
+          try {
+            const evAny: any = ev as any;
+            const args: any = evAny.args ?? evAny;
+            const pid = Number(args?.productId?.toString() ?? String(args?.[0] ?? '0'));
+            const existing = await prisma.product.findFirst({ where: { onchainId: pid } as any });
+            if (existing) {
+              await prisma.product.updateMany({
+                where: { onchainId: pid } as any,
+                data: {
+                  disputeRaised: false,
+                  escrowStatus: 'resolved'
+                }
+              });
+              console.log('Updated product dispute resolution (poll) for onchain id', pid);
+            }
+          } catch (e) {
+            console.error('Error processing DisputeResolved (poll)', e);
           }
         }
 

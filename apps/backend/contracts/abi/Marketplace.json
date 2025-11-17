@@ -15,9 +15,48 @@
     "inputs": [
       { "indexed": true, "internalType": "uint256", "name": "productId", "type": "uint256" },
       { "indexed": true, "internalType": "address", "name": "buyer", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "seller", "type": "address" },
       { "indexed": false, "internalType": "uint256", "name": "price", "type": "uint256" }
     ],
     "name": "ProductBought",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "productId", "type": "uint256" },
+      { "indexed": true, "internalType": "address", "name": "buyer", "type": "address" }
+    ],
+    "name": "DeliveryConfirmed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "productId", "type": "uint256" },
+      { "indexed": true, "internalType": "address", "name": "seller", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "EscrowReleased",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "productId", "type": "uint256" },
+      { "indexed": true, "internalType": "address", "name": "raisedBy", "type": "address" }
+    ],
+    "name": "DisputeRaised",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "productId", "type": "uint256" },
+      { "indexed": false, "internalType": "bool", "name": "favorBuyer", "type": "bool" },
+      { "indexed": true, "internalType": "address", "name": "resolver", "type": "address" }
+    ],
+    "name": "DisputeResolved",
     "type": "event"
   },
   {
@@ -37,6 +76,107 @@
     "name": "buyProduct",
     "outputs": [],
     "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "productId", "type": "uint256" }
+    ],
+    "name": "confirmDelivery",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "productId", "type": "uint256" }
+    ],
+    "name": "releaseEscrow",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "productId", "type": "uint256" }
+    ],
+    "name": "raiseDispute",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "productId", "type": "uint256" },
+      { "internalType": "bool", "name": "favorBuyer", "type": "bool" }
+    ],
+    "name": "resolveDispute",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "productId", "type": "uint256" }
+    ],
+    "name": "getProduct",
+    "outputs": [
+      { "internalType": "uint256", "name": "id", "type": "uint256" },
+      { "internalType": "address", "name": "seller", "type": "address" },
+      { "internalType": "address", "name": "buyer", "type": "address" },
+      { "internalType": "uint256", "name": "price", "type": "uint256" },
+      { "internalType": "bool", "name": "sold", "type": "bool" },
+      { "internalType": "bool", "name": "deliveryConfirmed", "type": "bool" },
+      { "internalType": "bool", "name": "disputeRaised", "type": "bool" },
+      { "internalType": "uint256", "name": "escrowReleaseTime", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getContractBalance",
+    "outputs": [
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nextProductId",
+    "outputs": [
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "ESCROW_DURATION",
+    "outputs": [
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "name": "products",
+    "outputs": [
+      { "internalType": "uint256", "name": "id", "type": "uint256" },
+      { "internalType": "address", "name": "seller", "type": "address" },
+      { "internalType": "uint256", "name": "price", "type": "uint256" },
+      { "internalType": "string", "name": "metadataURI", "type": "string" },
+      { "internalType": "bool", "name": "sold", "type": "bool" },
+      { "internalType": "address", "name": "buyer", "type": "address" },
+      { "internalType": "uint256", "name": "escrowReleaseTime", "type": "uint256" },
+      { "internalType": "bool", "name": "deliveryConfirmed", "type": "bool" },
+      { "internalType": "bool", "name": "disputeRaised", "type": "bool" }
+    ],
+    "stateMutability": "view",
     "type": "function"
   }
 ]

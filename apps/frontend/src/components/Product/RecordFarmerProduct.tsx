@@ -37,6 +37,25 @@ const RecordFarmerProduct: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
 
+  const autoPublishRecord = async (recordId: string) => {
+    if (!token) {
+      throw new Error("Missing authentication token.");
+    }
+    const postResponse = await fetch(apiPath('/farmer-products/post'), {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ recordId }),
+    });
+    const postResult = await postResponse.json();
+    if (!postResponse.ok) {
+      throw new Error(postResult.error || 'Failed to publish recorded product.');
+    }
+    return postResult;
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -84,7 +103,19 @@ const RecordFarmerProduct: React.FC = () => {
         throw new Error(result.error || "Failed to record farmer product.");
       }
 
-      setMessage("Product recorded successfully! Preparing for next entry...");
+      let successMessage = "Product recorded successfully! Preparing for next entry...";
+
+      if (result.record?.id) {
+        try {
+          await autoPublishRecord(result.record.id);
+          successMessage = "Product recorded and published successfully!";
+        } catch (publishError) {
+          const publishMessage = publishError instanceof Error ? publishError.message : "Unknown error publishing product.";
+          successMessage = `Product recorded but publishing failed: ${publishMessage}`;
+        }
+      }
+
+      setMessage(successMessage);
       setFormData({
         farmerName: "",
         farmerPhone: "",

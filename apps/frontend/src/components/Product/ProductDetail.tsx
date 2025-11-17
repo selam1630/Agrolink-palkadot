@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import toast from 'react-hot-toast';
 import { useParams, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ShoppingCart, ArrowLeft, Check, Phone } from "lucide-react";
+import { ShoppingCart, ArrowLeft, Check, Phone, Shield, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "../cart/CartContext";
 import { useAuth } from "../../context/AuthContext";
@@ -286,6 +286,31 @@ const ProductDetail: React.FC = () => {
                   ) : null}
                 </>
               ) : null}
+              
+              {/* View Escrow for sold products */}
+              {product?.isSold && product?.onchainId ? (
+                <Link to={`/EscrowManagement/${product.id}`}>
+                  <Button
+                    className="w-full bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-300"
+                  >
+                    <Shield size={16} className="mr-2" />
+                    View Escrow Status
+                  </Button>
+                </Link>
+              ) : null}
+              
+              {/* View Supply Chain Traceability */}
+              {product?.isSold ? (
+                <Link to={`/supply-chain/${product.id}`}>
+                  <Button
+                    className="w-full bg-indigo-600 text-white hover:bg-indigo-700 transition-colors duration-300"
+                  >
+                    <Package size={16} className="mr-2" />
+                    Track Supply Chain
+                  </Button>
+                </Link>
+              ) : null}
+              
               <Link to="/products">
                 <Button
                   variant="outline"
